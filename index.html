@@ -113,6 +113,15 @@ h1 span{color:var(--gold-soft)}
 .mnode.scr small{color:#e2d4b6}
 .soon-tag{flex:none;font-size:11px;font-weight:700;color:#8a6420;background:#fbf0d8;border:1px solid #e6cf97;border-radius:999px;padding:2px 8px}
 .map .tip{margin-top:20px;font-size:14px;color:#6b5a80;line-height:1.6;background:#fff;border:1px dashed var(--gold);border-radius:14px;padding:12px 14px}
+
+.mtree .kids{display:none}
+.mtree .has.open>.kids{display:block;animation:fadein .25s ease both}
+.chev,.go{flex:none;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.chev{background:rgba(255,255,255,.12)}
+.chev svg,.go svg{width:18px;height:18px;fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.chev svg{stroke:var(--gold-soft);transition:transform .25s}
+.has.open>.mnode .chev svg{transform:rotate(180deg)}
+.go{background:#f6efdf}.go svg{stroke:var(--purple)}
 @keyframes fadein{from{opacity:0}to{opacity:1}}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
 @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
@@ -168,21 +177,8 @@ h1 span{color:var(--gold-soft)}
       <img class="mini-logo" src="logo.png" alt="">
     </div>
     <h2>מפת האפליקציה</h2>
-    <p class="lead">כאן תמצאו את כל מה שיש באפליקציה ואיך מגיעים לכל דבר. לכל כפתור יש מספר. לחיצה על שורה במפה מביאה אתכם ישר לשם.</p>
-    <ul>
-      <li><button class="mnode scr" data-go="0"><span class="n">0</span><span class="t"><b>דף הפתיחה</b><small>ברוכים הבאים לקהילה של נחמי</small></span></button>
-        <ul>
-          <li><button class="mnode scr" data-go="1"><span class="n">1</span><span class="t"><b>כניסה</b><small>בחירה: צפייה בתכנים או פרסום</small></span></button>
-            <ul>
-              <li><button class="mnode" data-go="1.1"><span class="n">1.1</span><span class="t"><b>צפייה בתכנים</b><small>כל מה שנחמי מעלה, שמור לצפייה חוזרת</small></span><span class=soon-tag>בקרוב</span></button></li>
-              <li><button class="mnode" data-go="1.2"><span class="n">1.2</span><span class="t"><b>פרסום בקהילה של נחמי</b><small>מוצרים למכירה ושטחי פרסום למפרסמים</small></span><span class=soon-tag>בקרוב</span></button></li>
-            </ul>
-          </li>
-          <li><button class="mnode" data-go="2"><span class="n">2</span><span class="t"><b>הסרטון של נחמי</b><small>סרטון הסטטוס של נחמי</small></span><span class=soon-tag>בקרוב</span></button></li>
-          <li><button class="mnode" data-go="3"><span class="n">3</span><span class="t"><b>מפת האפליקציה</b><small>העמוד הזה</small></span></button></li>
-        </ul>
-      </li>
-    </ul>
+    <p class="lead">כאן תמצאו את כל מה שיש באפליקציה ואיך מגיעים לכל דבר. לכל כפתור יש מספר. לחיצה על כפתור עם חץ למטה פותחת את מה שיש בתוכו, ולחיצה על כפתור סופי מביאה אתכם ישר לשם.</p>
+    <ul class="mtree"><li><button class="mnode" data-go="0"><span class="n">0</span><span class="t"><b>דף הפתיחה</b><small>ברוכים הבאים לקהילה של נחמי</small></span><span class="go"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></span></button></li><li class="has"><button class="mnode scr" data-tog><span class="n">1</span><span class="t"><b>כניסה</b><small>צפייה בתכנים או פרסום</small></span><span class="chev"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></button><ul class="kids"><li><button class="mnode" data-go="1.1"><span class="n">1.1</span><span class="t"><b>צפייה בתכנים</b><small>כל מה שנחמי מעלה, שמור לצפייה חוזרת</small></span><span class="soon-tag">בקרוב</span><span class="go"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></span></button></li><li><button class="mnode" data-go="1.2"><span class="n">1.2</span><span class="t"><b>פרסום בקהילה של נחמי</b><small>מוצרים למכירה ושטחי פרסום למפרסמים</small></span><span class="soon-tag">בקרוב</span><span class="go"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></span></button></li></ul></li><li><button class="mnode" data-go="2"><span class="n">2</span><span class="t"><b>הסרטון של נחמי</b><small>סרטון הסטטוס של נחמי</small></span><span class="soon-tag">בקרוב</span><span class="go"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></span></button></li><li><button class="mnode" data-go="3"><span class="n">3</span><span class="t"><b>מפת האפליקציה</b><small>העמוד הזה</small></span><span class="go"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></span></button></li></ul>
     <div class="tip">המספר של כל כפתור מופיע גם על הכפתור עצמו באפליקציה, בעיגול קטן.</div>
   </div>
 </div>
@@ -214,6 +210,7 @@ h1 span{color:var(--gold-soft)}
     '1.1':function(){location.hash='menu';showToast('התכנים יעלו כאן בקרוב')},
     '1.2':function(){location.hash='menu';showToast('אזור הפרסום יעלה כאן בקרוב')},
     '2':function(){location.hash='';m.classList.add('show')},'3':function(){location.hash='map'}};
+  document.querySelectorAll('[data-tog]').forEach(function(el){el.onclick=function(){el.parentNode.classList.toggle('open')}});
   document.querySelectorAll('[data-go]').forEach(function(el){el.onclick=function(){go[el.dataset.go]()}});
 })();
 </script>
