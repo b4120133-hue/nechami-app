@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2a1049">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="הקהילה של נחמי">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>הקהילה של נחמי</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@700;900&family=Heebo:wght@400;500;700;800&display=swap">
+<style>
+:root{--purple:#3b1a63;--deep:#2a1049;--gold:#d4a94a;--gold-soft:#f0d58f;--cream:#f4efe6;--text:#efe4cc}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--deep)}
+body{font-family:'Heebo',sans-serif;-webkit-font-smoothing:antialiased}
+.app{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;
+  background:radial-gradient(130% 70% at 50% 0%,#4b2380 0%,var(--purple) 40%,var(--deep) 100%);
+  color:var(--cream);text-align:center;
+  padding:calc(env(safe-area-inset-top) + 36px) 26px calc(env(safe-area-inset-bottom) + 26px)}
+.logo{width:150px;height:150px;border-radius:26px;display:block;margin:0 auto 20px;
+  box-shadow:0 0 0 2px rgba(212,169,74,.75),0 14px 34px rgba(0,0,0,.45);animation:rise .9s ease both}
+h1{font-family:'Frank Ruhl Libre',serif;font-weight:900;font-size:33px;line-height:1.15;margin:0 0 6px;animation:rise .9s .1s ease both}
+h1 span{color:var(--gold-soft)}
+.line{width:70px;height:2px;background:var(--gold);margin:16px auto 22px;border-radius:2px;animation:rise .9s .15s ease both}
+.text{flex:1;animation:rise .9s .2s ease both}
+.text p{margin:0 0 16px;font-size:16.5px;line-height:1.7;color:var(--text)}
+.text strong{color:var(--gold-soft);font-weight:700}
+.cta{width:100%;margin-top:18px;border:0;cursor:pointer;font-family:'Heebo',sans-serif;font-weight:800;font-size:22px;
+  color:var(--deep);padding:17px;border-radius:999px;
+  background:linear-gradient(180deg,#f3dc92,var(--gold) 55%,#b98a2c);
+  box-shadow:0 10px 24px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.6);transition:transform .15s}
+.cta:active{transform:scale(.97)}
+.hint{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 18px);transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:2px;color:var(--gold-soft);font-size:13px;font-weight:500;
+  background:#2a1049;box-shadow:0 6px 18px rgba(0,0,0,.5);padding:8px 18px 6px;border-radius:999px;border:1px solid rgba(212,169,74,.5);
+  transition:opacity .35s;pointer-events:none;z-index:5}
+.hint svg{width:22px;height:22px;stroke:var(--gold);fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;animation:bob 1.4s ease-in-out infinite}
+.hint.hide{opacity:0}
+.video-btn{width:100%;margin-top:12px;cursor:pointer;font-family:'Heebo',sans-serif;font-weight:700;font-size:17px;
+  color:var(--gold-soft);padding:13px;border-radius:999px;background:rgba(255,255,255,.06);border:2px solid var(--gold);
+  display:flex;align-items:center;justify-content:center;gap:10px;transition:transform .15s}
+.video-btn:active{transform:scale(.97)}
+.video-btn .play{width:28px;height:28px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center}
+.video-btn .play svg{width:13px;height:13px;fill:var(--deep);margin-right:-2px}
+.modal{position:fixed;inset:0;background:rgba(20,6,38,.92);display:none;align-items:center;justify-content:center;padding:24px;z-index:20}
+.modal.show{display:flex}
+.modal-box{width:100%;max-width:400px;text-align:center}
+.screen{aspect-ratio:9/16;max-height:70vh;margin:0 auto 18px;border-radius:22px;border:2px solid var(--gold);
+  background:var(--purple);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--text);font-size:16px}
+.screen .play{width:64px;height:64px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center}
+.screen .play svg{width:26px;height:26px;fill:var(--deep);margin-right:-4px}
+.close{background:transparent;border:2px solid var(--gold);color:var(--gold-soft);border-radius:999px;padding:10px 30px;font:700 16px 'Heebo',sans-serif;cursor:pointer}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <img class="logo" src="logo.png" alt="הקהילה של נחמי">
+  <h1>ברוכים הבאים<br><span>לקהילה של נחמי</span></h1>
+  <div class="line"></div>
+
+  <div class="text">
+    <p>כבר <strong>שבע שנים</strong> שנחמי מעלה תכנים בסטטוס, ומסביבם נוצרה קהילה מכובדת של <strong>אלפי</strong> גברים ונשים שמאמינים בה.</p>
+    <p>נחמי הקימה ומנהלת כבר למעלה מעשור <strong>מטבח חסד</strong>, שמכין אוכל לשבת למשפחות שזקוקות לכך, ומשתפת אתכם מהפעילות שבו.</p>
+    <p>בקהילה תמצאו מתכונים קלים ומושקעים, סרטוני חיזוק, בוקר טוב וערב טוב, טיפים לבית, לניקיון ולמטבח, ואת <strong>נחמית</strong> עם סיפורים לילדים, חידות והגרלות.</p>
+    <p>יש כאן גם לוח קהילתי <strong>בחינם</strong>: השבת אבידה, דרושים ומחפשי עבודה, מסירות ויד שנייה.</p>
+    <p>נחמי פועלת מאחורי הקלעים, מסביב לשעון (חוץ משבת), כדי לעזור. כל המלצה שלה נבדקת על ידה לעומק לפני שהיא עולה, ומחכים לכם <strong>קופונים והנחות</strong> במיוחד לחברי הקהילה.</p>
+  </div>
+
+  <button class="cta" id="enter">כניסה</button>
+  <button class="video-btn" id="videoBtn"><span class="play"><svg viewBox="0 0 24 24"><path d="M19 12 6 4v16z"/></svg></span>לצפייה בסרטון של נחמי</button>
+</div>
+<div class="modal" id="modal" role="dialog" aria-label="הסרטון של נחמי">
+  <div class="modal-box">
+    <div class="screen" id="screen"><span class="play"><svg viewBox="0 0 24 24"><path d="M19 12 6 4v16z"/></svg></span>הסרטון יעלה כאן בקרוב</div>
+    <button class="close" id="close">סגירה</button>
+  </div>
+</div>
+<div class="hint hide" id="hint" aria-hidden="true">גללו למטה<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></div>
+<script>
+(function(){
+  var h=document.getElementById('hint'),b=document.getElementById('enter');
+  function chk(){var r=b.getBoundingClientRect();h.classList.toggle('hide',r.top<window.innerHeight-20);}
+  window.addEventListener('scroll',chk,{passive:true});window.addEventListener('resize',chk);
+  setTimeout(chk,600);
+  var m=document.getElementById('modal');
+  document.getElementById('videoBtn').onclick=function(){m.classList.add('show')};
+  document.getElementById('close').onclick=function(){m.classList.remove('show')};
+  m.onclick=function(e){if(e.target===m)m.classList.remove('show')};
+})();
+</script>
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})})}</script>
+</body>
+</html>
