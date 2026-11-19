@@ -226,6 +226,8 @@ h1 span{color:var(--gold-soft)}
 <div class="hint hide" id="hint" aria-hidden="true">גללו למטה<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></div>
 <script>
 (function(){
+  function nav(h){if(('#'+h)===location.hash||(h===''&&!location.hash))return;history.pushState({app:1},'',h?'#'+h:location.pathname+location.search);window.dispatchEvent(new HashChangeEvent('hashchange'));}
+  function goBack(parent){if(history.state&&history.state.app){history.back();}else{history.replaceState(null,'',parent?'#'+parent:location.pathname+location.search);window.dispatchEvent(new HashChangeEvent('hashchange'));}}
   var h=document.getElementById('hint'),b=document.getElementById('enter');
   function chk(){var r=b.getBoundingClientRect();h.classList.toggle('hide',r.top<window.innerHeight-20);}
   window.addEventListener('scroll',chk,{passive:true});window.addEventListener('resize',chk);
@@ -236,23 +238,23 @@ h1 span{color:var(--gold-soft)}
   m.onclick=function(e){if(e.target===m)m.classList.remove('show')};
   var menu=document.getElementById('menu'),toast=document.getElementById('toast'),tt;
   function route(){var on=location.hash==='#menu';menu.classList.toggle('show',on);document.body.style.overflow=on?'hidden':'';if(on)menu.scrollTop=0;}
-  document.getElementById('enter').onclick=function(){location.hash='menu'};
-  document.getElementById('back2').onclick=function(){history.length>1?history.back():(location.hash='')};
+  document.getElementById('enter').onclick=function(){nav('menu')};
+  document.getElementById('back2').onclick=function(){goBack('')};
   window.addEventListener('hashchange',route);route();
-  document.querySelectorAll('.choice').forEach(function(c){c.onclick=function(){if(c.classList.contains('c1')){location.hash='content';return;}toast.textContent=c.dataset.msg;toast.classList.add('show');clearTimeout(tt);tt=setTimeout(function(){toast.classList.remove('show')},1800)}});
+  document.querySelectorAll('.choice').forEach(function(c){c.onclick=function(){if(c.classList.contains('c1')){nav('content');return;}toast.textContent=c.dataset.msg;toast.classList.add('show');clearTimeout(tt);tt=setTimeout(function(){toast.classList.remove('show')},1800)}});
   var map=document.getElementById('map');
   function showToast(t){toast.textContent=t;toast.classList.add('show');clearTimeout(tt);tt=setTimeout(function(){toast.classList.remove('show')},1800)}
   var content=document.getElementById('content');
   function route2(){var h=location.hash;map.classList.toggle('show',h==='#map');menu.classList.toggle('show',h==='#menu');content.classList.toggle('show',h==='#content');
     document.body.style.overflow=(h==='#map'||h==='#menu'||h==='#content')?'hidden':'';if(h==='#content')content.scrollTop=0;if(h==='#map')map.scrollTop=0;}
   window.removeEventListener('hashchange',route);window.addEventListener('hashchange',route2);route2();
-  document.getElementById('back3').onclick=function(){history.length>1?history.back():(location.hash='')};
-  var go={'0':function(){location.hash=''},'1':function(){location.hash='menu'},
-    '1.1':function(){location.hash='content'},
-    '1.2':function(){location.hash='menu';showToast('אזור הפרסום יעלה כאן בקרוב')},
-    '2':function(){location.hash='';m.classList.add('show')},'3':function(){location.hash='map'}};
-  for(var i=1;i<=14;i++)(function(k){go[k]=function(){location.hash='content';showToast('התכנים יעלו כאן בקרוב')}})('1.1.'+i);
-  document.getElementById('back4').onclick=function(){location.hash='menu'};
+  document.getElementById('back3').onclick=function(){goBack('')};
+  var go={'0':function(){nav('')},'1':function(){nav('menu')},
+    '1.1':function(){nav('content')},
+    '1.2':function(){nav('menu');showToast('אזור הפרסום יעלה כאן בקרוב')},
+    '2':function(){nav('');m.classList.add('show')},'3':function(){nav('map')}};
+  for(var i=1;i<=14;i++)(function(k){go[k]=function(){nav('content');showToast('התכנים יעלו כאן בקרוב')}})('1.1.'+i);
+  document.getElementById('back4').onclick=function(){goBack('menu')};
   document.querySelector('.choice.c1').removeAttribute('data-msg');
   document.querySelectorAll('[data-tog]').forEach(function(el){el.onclick=function(){el.parentNode.classList.toggle('open')}});
   document.querySelectorAll('[data-go]').forEach(function(el){el.onclick=function(){go[el.dataset.go]()}});
