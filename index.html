@@ -217,6 +217,9 @@ h1 span{color:var(--gold-soft)}
 .wa-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:12px;border:0;border-radius:999px;padding:14px;background:#25D366;color:#fff;font:800 17px 'Heebo',sans-serif;cursor:pointer}
 .wa-btn svg{width:24px;height:24px;fill:#fff}
 .wa-btn.sent{background:#1b8f46}
+.reply-info{margin:4px 0 16px;padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.07);border:1.5px dashed rgba(212,169,74,.6);color:var(--text);font-size:15px;line-height:1.6}
+.reply-info b{color:var(--cream)}
+.reply-info .tel{color:var(--gold-soft);font-weight:800;font-size:19px;text-decoration:none;direction:ltr;display:inline-block}
 @keyframes fadein{from{opacity:0}to{opacity:1}}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
 @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
@@ -374,9 +377,8 @@ h1 span{color:var(--gold-soft)}
   <div class="modal-box send-box">
     <h2 class="vid-title">שליחת <span>ההזמנה</span></h2>
     <pre class="sum" id="sumText"></pre>
-    <p class="send-note">לחצו על כל אחד מהכפתורים, וההזמנה תישלח בוואטסאפ:</p>
-    <button class="wa-btn" id="wa1"><svg viewBox="0 0 24 24"><path d="M20.5 3.5A11 11 0 0 0 3.3 17.2L2 22l4.9-1.3A11 11 0 1 0 20.5 3.5zM12 20a8 8 0 0 1-4.1-1.1l-.3-.2-2.9.8.8-2.8-.2-.3A8 8 0 1 1 12 20zm4.4-6c-.2-.1-1.4-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.6 6.6 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.1 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.9 11.9 0 0 0 4.6 4c1.7.7 2.3.8 3.2.7a2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.2-.2-.5-.3z" fill="currentColor" stroke="none"/></svg><span>שליחה בוואטסאפ – מספר 1</span></button>
-    <button class="wa-btn" id="wa2"><svg viewBox="0 0 24 24"><path d="M20.5 3.5A11 11 0 0 0 3.3 17.2L2 22l4.9-1.3A11 11 0 1 0 20.5 3.5zM12 20a8 8 0 0 1-4.1-1.1l-.3-.2-2.9.8.8-2.8-.2-.3A8 8 0 1 1 12 20zm4.4-6c-.2-.1-1.4-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.6 6.6 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.1 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.9 11.9 0 0 0 4.6 4c1.7.7 2.3.8 3.2.7a2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.2-.2-.5-.3z" fill="currentColor" stroke="none"/></svg><span>שליחה בוואטסאפ – מספר 2</span></button>
+    <button class="wa-btn" id="wa1"><svg viewBox="0 0 24 24"><path d="M20.5 3.5A11 11 0 0 0 3.3 17.2L2 22l4.9-1.3A11 11 0 1 0 20.5 3.5zM12 20a8 8 0 0 1-4.1-1.1l-.3-.2-2.9.8.8-2.8-.2-.3A8 8 0 1 1 12 20zm4.4-6c-.2-.1-1.4-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.6 6.6 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.1 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.9 11.9 0 0 0 4.6 4c1.7.7 2.3.8 3.2.7a2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.2-.2-.5-.3z" fill="currentColor" stroke="none"/></svg><span>שליחה בוואטסאפ</span></button>
+    <div class="reply-info"><b>מענה יינתן תוך 24 שעות בימי עבודה.</b><br>למקרים דחופים ניתן להתקשר:<br><a href="tel:0504120123" class="tel">050-4120123</a></div>
     <button class="close" id="sendClose">סגירה</button>
   </div>
 </div>
@@ -425,24 +427,21 @@ h1 span{color:var(--gold-soft)}
   go['1.2.1.1']=function(){nav('pkg1')};
   document.getElementById('back7').onclick=function(){goBack('biz')};
   /* package 1 calculator */
-  var WA1='', WA2=''; /* מספרי הוואטסאפ יתווספו כאן, בפורמט 9725XXXXXXXX */
+  var WA1='972504120123'; /* מספר הוואטסאפ לקבלת הזמנות */
   var BASE=5000, months=1;
   function fmt(n){return '₪'+n.toLocaleString('en-US')}
   function qty(id){return +document.querySelector('#'+id+' .qv').textContent}
   function calc(){var t=BASE*months;document.querySelectorAll('.addon[data-price]').forEach(function(a){t+=(+a.dataset.price)*(+a.querySelector('.qv').textContent)});document.getElementById('total').textContent=fmt(t);return t}
   document.querySelectorAll('#months .mo').forEach(function(b){b.onclick=function(){document.querySelectorAll('#months .mo').forEach(function(x){x.classList.remove('on')});b.classList.add('on');months=+b.dataset.m;calc()}});
   document.querySelectorAll('.addon .qb').forEach(function(b){b.onclick=function(){var a=b.closest('.addon'),v=a.querySelector('.qv'),n=Math.max(0,Math.min(20,+v.textContent+(+b.dataset.d)));v.textContent=n;a.classList.toggle('on',n>0);calc()}});
-  function summary(){var L=['הזמנת פרסום – הקהילה של נחמי','חבילה 1 · חבילת בסיס','משך: '+months+(months==1?' חודש':' חודשים')+' ('+fmt(BASE*months)+')'];
-    var q1=qty('ad1'),q2=qty('ad2');if(q1)L.push('צילום סושיאל × '+q1+' ('+fmt(1500*q1)+')');if(q2)L.push('הגעה לסיקור × '+q2+' ('+fmt(800*q2)+')');
-    var ex=document.getElementById('extra').value.trim();if(ex)L.push('תוספות שונות: '+ex);
-    var nm=document.getElementById('cName').value.trim(),ph=document.getElementById('cPhone').value.trim();if(nm)L.push('שם: '+nm);if(ph)L.push('טלפון: '+ph);
-    L.push('סה״כ: '+fmt(calc()));return L.join('\n')}
+  function summary(){var q1=qty('ad1'),q2=qty('ad2'),ex=document.getElementById('extra').value.trim(),nm=document.getElementById('cName').value.trim(),ph=document.getElementById('cPhone').value.trim();
+    var p='חבילה מספר 1 (חבילת בסיס) ל-'+(months==1?'חודש אחד':months+' חודשים');if(q1)p+=' + צילום סושיאל'+(q1>1?' ×'+q1:'');if(q2)p+=' + הגעה לסיקור'+(q2>1?' ×'+q2:'');if(ex)p+=' + תוספות: '+ex;
+    var L=['שלום, הגעתי דרך האפליקציה של הקהילה של נחמי.','מעוניין/ת בפרסום '+p+'.','סה״כ: '+fmt(calc())];if(nm)L.push('שם: '+nm);if(ph)L.push('טלפון: '+ph);L.push('','נא לחזור אליי לפרטים.');return L.join('\n')}
   var sm=document.getElementById('sendModal');
   document.getElementById('pkgNext').onclick=function(){document.getElementById('sumText').textContent=summary();document.querySelectorAll('.wa-btn').forEach(function(b){b.classList.remove('sent')});sm.classList.add('show')};
   document.getElementById('sendClose').onclick=function(){sm.classList.remove('show')};
   function sendTo(num,btn){if(!num){showToast('מספר הוואטסאפ יתווסף בקרוב');return}btn.classList.add('sent');location.href='https://wa.me/'+num+'?text='+encodeURIComponent(summary())}
   document.getElementById('wa1').onclick=function(){sendTo(WA1,this)};
-  document.getElementById('wa2').onclick=function(){sendTo(WA2,this)};
   document.querySelector('.choice.c1').removeAttribute('data-msg');
   document.querySelectorAll('.home-btn').forEach(function(b){b.onclick=goHome});
   document.querySelectorAll('[data-tog]').forEach(function(el){el.onclick=function(){el.parentNode.classList.toggle('open')}});
