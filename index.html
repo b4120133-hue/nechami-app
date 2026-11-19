@@ -303,7 +303,7 @@ h1 span{color:var(--gold-soft)}
   document.getElementById('videoBtn').onclick=function(){m.classList.add('show')};
   var v1=document.getElementById('vid1'),w1=document.getElementById('vwrap1');
   function closeM(){m.classList.remove('show');try{v1.pause()}catch(e){}}
-  document.getElementById('vplay1').onclick=function(){v1.controls=true;w1.classList.add('vplaying');var p=v1.play();if(p&&p.catch)p.catch(function(){})};
+  document.getElementById('vplay1').onclick=function(){try{v1.currentTime=0}catch(e){}v1.controls=true;w1.classList.add('vplaying');var p=v1.play();if(p&&p.catch)p.catch(function(){})};
   document.getElementById('close').onclick=closeM;
   m.onclick=function(e){if(e.target===m)closeM()};
   var menu=document.getElementById('menu'),toast=document.getElementById('toast'),tt;
