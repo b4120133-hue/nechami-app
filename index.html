@@ -151,6 +151,10 @@ h1 span{color:var(--gold-soft)}
 .mic svg{width:20px;height:20px;fill:none;stroke:var(--deep);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .mic.face{background:var(--deep);box-shadow:0 0 0 2px var(--gold)}
 .mic.face img{width:100%;height:100%;object-fit:cover;display:block}
+.home-btn{display:flex;align-items:center;gap:5px;margin-right:auto;margin-left:10px;background:rgba(255,255,255,.08);border:1.5px solid rgba(212,169,74,.7);
+  color:var(--gold-soft);border-radius:999px;padding:6px 12px;font:700 14px 'Heebo',sans-serif;cursor:pointer}
+.home-btn svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.map .home-btn{color:var(--purple);background:#fff;border-color:var(--gold)}
 @keyframes fadein{from{opacity:0}to{opacity:1}}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
 @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
@@ -185,7 +189,7 @@ h1 span{color:var(--gold-soft)}
   <div class="menu-in">
     <div class="top">
       <button class="back2" id="back2"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>חזרה</button>
-      <img class="mini-logo" src="logo.png" alt="">
+      <button class="home-btn" aria-label="דף הבית"><svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/></svg>בית</button><img class="mini-logo" src="logo.png" alt="">
     </div>
     <h2>מה בא לכם <span>היום?</span></h2>
     <p class="sub">בחרו לאן להיכנס</p>
@@ -203,7 +207,7 @@ h1 span{color:var(--gold-soft)}
   <div class="map-in">
     <div class="top">
       <button class="back2" id="back3"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>חזרה</button>
-      <img class="mini-logo" src="logo.png" alt="">
+      <button class="home-btn" aria-label="דף הבית"><svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/></svg>בית</button><img class="mini-logo" src="logo.png" alt="">
     </div>
     <h2>מפת האפליקציה</h2>
     <p class="lead">כאן תמצאו את כל מה שיש באפליקציה ואיך מגיעים לכל דבר. לכל כפתור יש מספר. לחיצה על כפתור עם חץ למטה פותחת את מה שיש בתוכו, ולחיצה על כפתור סופי מביאה אתכם ישר לשם.</p>
@@ -215,7 +219,7 @@ h1 span{color:var(--gold-soft)}
   <div class="menu-in">
     <div class="top">
       <button class="back2" id="back4"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>חזרה</button>
-      <img class="mini-logo" src="logo.png" alt="">
+      <button class="home-btn" aria-label="דף הבית"><svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/></svg>בית</button><img class="mini-logo" src="logo.png" alt="">
     </div>
     <h2>צפייה <span>בתכנים</span></h2>
     <p class="sub">בחרו נושא</p>
@@ -226,7 +230,8 @@ h1 span{color:var(--gold-soft)}
 <div class="hint hide" id="hint" aria-hidden="true">גללו למטה<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></div>
 <script>
 (function(){
-  function nav(h){if(('#'+h)===location.hash||(h===''&&!location.hash))return;history.pushState({app:1},'',h?'#'+h:location.pathname+location.search);window.dispatchEvent(new HashChangeEvent('hashchange'));}
+  function nav(h){if(('#'+h)===location.hash||(h===''&&!location.hash))return;var d=(history.state&&history.state.d)||0;history.pushState({app:1,d:d+1},'',h?'#'+h:location.pathname+location.search);window.dispatchEvent(new HashChangeEvent('hashchange'));}
+  function goHome(){var d=(history.state&&history.state.d)||0;if(d>0){history.go(-d);}else{history.replaceState(null,'',location.pathname+location.search);window.dispatchEvent(new HashChangeEvent('hashchange'));}}
   function goBack(parent){if(history.state&&history.state.app){history.back();}else{history.replaceState(null,'',parent?'#'+parent:location.pathname+location.search);window.dispatchEvent(new HashChangeEvent('hashchange'));}}
   var h=document.getElementById('hint'),b=document.getElementById('enter');
   function chk(){var r=b.getBoundingClientRect();h.classList.toggle('hide',r.top<window.innerHeight-20);}
@@ -256,6 +261,7 @@ h1 span{color:var(--gold-soft)}
   for(var i=1;i<=14;i++)(function(k){go[k]=function(){nav('content');showToast('התכנים יעלו כאן בקרוב')}})('1.1.'+i);
   document.getElementById('back4').onclick=function(){goBack('menu')};
   document.querySelector('.choice.c1').removeAttribute('data-msg');
+  document.querySelectorAll('.home-btn').forEach(function(b){b.onclick=goHome});
   document.querySelectorAll('[data-tog]').forEach(function(el){el.onclick=function(){el.parentNode.classList.toggle('open')}});
   document.querySelectorAll('[data-go]').forEach(function(el){el.onclick=function(){go[el.dataset.go]()}});
 })();
