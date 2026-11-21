@@ -112,6 +112,10 @@ textarea:focus,.inp:focus{outline:2px solid var(--gold);outline-offset:1px}
 /* settings */
 .field{display:flex;flex-direction:column;gap:6px;margin-bottom:18px}
 .field label{font-weight:600}
+.howto{margin:0;padding:0;list-style:none;counter-reset:h;display:flex;flex-direction:column;gap:12px}
+.howto li{counter-increment:h;display:flex;flex-direction:column;gap:2px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 64px 14px 16px;position:relative;font-size:18px}
+.howto li::before{content:counter(h);position:absolute;right:16px;top:14px;width:34px;height:34px;border-radius:50%;background:var(--btn);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700}
+.howto span{color:var(--soft);font-size:15px}
 .toast{position:fixed;bottom:110px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 20px;border-radius:999px;font-size:15px;z-index:30;display:none}
 .toast.on{display:block}
 :focus-visible{outline:2px solid var(--ink);outline-offset:2px}
@@ -183,6 +187,30 @@ textarea:focus,.inp:focus{outline:2px solid var(--gold);outline-offset:1px}
   </div>
 </section>
 
+<!-- ================= HANDOFF TO CHATGPT APP ================= -->
+<section class="view" id="hand">
+  <header class="top">
+    <button class="iconbtn" type="button" id="handBack" aria-label="חזרה לבחירות">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+    </button>
+    <h2>שולחים ל-ChatGPT</h2>
+  </header>
+  <div class="body" style="max-width:720px">
+    <ol class="howto">
+      <li><b>בחלון שנפתח בחרי ChatGPT.</b><span>התוכניות והפריטים יעברו לשם לבד.</span></li>
+      <li><b>הטקסט כבר מוכן.</b><span>אם הוא לא הופיע בתיבת הכתיבה – לחיצה ארוכה בתיבה ← "הדבק".</span></li>
+      <li><b>לוחצים שליחה ב-ChatGPT.</b><span>אחרי דקה-שתיים ההדמיות מוכנות שם.</span></li>
+      <li><b>שולחים ללקוח או לאחות.</b><span>אפשר ישר מ-ChatGPT, או לשמור לגלריה ולהעלות לכאן – ואז הן נשמרות גם ב"הדמיות האחרונות".</span></li>
+    </ol>
+    <div style="display:flex;flex-direction:column;gap:12px;margin-top:22px">
+      <button class="big" type="button" id="handAgain">פתיחת ChatGPT שוב</button>
+      <button class="ghost" type="button" id="handCopy" style="min-height:52px">העתקת הטקסט שוב</button>
+      <label class="add" style="min-height:68px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 19V5M7 10l5-5 5 5"/></svg>ההדמיות מוכנות? העלי אותן לכאן<input type="file" accept="image/*,application/pdf,.pdf" multiple id="handIn" aria-label="העלאת ההדמיות מ-ChatGPT"></label>
+    </div>
+    <details style="margin-top:24px"><summary class="muted" style="cursor:pointer;min-height:44px">הטקסט שנשלח ל-ChatGPT</summary><pre id="handText" dir="ltr" style="white-space:pre-wrap;font:14px/1.5 system-ui,sans-serif;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;color:var(--soft)"></pre></details>
+  </div>
+</section>
+
 <!-- ================= SETTINGS ================= -->
 <section class="view" id="set">
   <header class="top">
@@ -192,11 +220,11 @@ textarea:focus,.inp:focus{outline:2px solid var(--gold);outline-offset:1px}
     <h2>הגדרות</h2>
   </header>
   <div class="body" style="max-width:640px">
-    <div class="note">את ההגדרות האלה ממלאים פעם אחת בכל טאבלט. הן נשמרות רק במכשיר הזה.</div>
+    <div class="note">את ההגדרות ממלאים פעם אחת בכל טאבלט, והן נשמרות רק במכשיר הזה. בלי מפתח – ההדמיות נוצרות באפליקציית ChatGPT שלך, בחינם דרך המנוי.</div>
     <div class="field">
-      <label for="kKey">מפתח ChatGPT ‏(OpenAI API key)</label>
+      <label for="kKey">מפתח ChatGPT ‏(לא חובה)</label>
       <input class="inp" id="kKey" type="password" autocomplete="off" dir="ltr" placeholder="sk-...">
-      <span class="muted">מתחיל ב-sk-. בלעדיו האפליקציה לא יכולה לזהות פריטים וליצור הדמיות.</span>
+      <span class="muted">רק אם רוצים שההדמיות ייווצרו בתוך האפליקציה עצמה. זה בתשלום נפרד ב-OpenAI. בלי מפתח הכול עובד דרך אפליקציית ChatGPT.</span>
     </div>
     <div class="field">
       <label for="kSis">מספר הוואטסאפ של האחות</label>
@@ -458,7 +486,7 @@ const STEPS = [
   {t:'ריצוף וקירות', render:rWalls, ok:()=>true, next:'המשך לתאורה'},
   {t:'תאורה וחשמל', render:rLight, ok:()=>true, next:'המשך'},
   {t:'חומרים ופריטים שלך', render:rRefs, ok:()=>true, next:'המשך לסיכום'},
-  {t:'סיכום', render:rSum, ok:()=>true, next:'צרו לי הדמיות'}
+  {t:'סיכום', render:rSum, ok:()=>true, next:()=>KEY()?'צרו לי הדמיות':'שליחה ל-ChatGPT'}
 ];
 function go(n){
   step=n; show('wiz');
@@ -466,7 +494,7 @@ function go(n){
   $('dots').innerHTML=STEPS.map((_,i)=>`<i class="${i<=n?'done':''}"></i>`).join('');
   STEPS[n].render(); refreshNext();
 }
-function refreshNext(){ const s=STEPS[step]; $('nextBtn').textContent=s.next; $('nextBtn').disabled=!s.ok(); }
+function refreshNext(){ const s=STEPS[step]; $('nextBtn').textContent=typeof s.next==='function'?s.next():s.next; $('nextBtn').disabled=!s.ok(); }
 
 /* ---- step 1: plans ---- */
 const SLOTS=[['top','תוכנית מבט על','תוכנית הדירה / החלל מלמעלה','<path d="M3 3h18v18H3zM3 12h7v9M10 3v5M14 12h7M14 12v4"/>'],['walls','תוכנית קירות וחזיתות','פריסות קירות, מטבח, חזיתות','<path d="M3 20h18M5 20V6h14v14M5 10h14M9 6v4M15 6v4M8 14h3v6M14 14h3v3h-3z"/>'],['other','תוכנית חשמל / אחר','תאורה, חשמל, סקיצות, תמונות השראה','<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>']];
@@ -578,7 +606,7 @@ function rSum(){
   const paint=(PAINT.find(p=>p[0]===S.paint)||[])[1];
   const rows=[['תוכניות',`${allPlans().length} תמונות`],['פרויקט',[typ,S.rooms.join(', ')].filter(Boolean).join(' – ')],['סגנון',S.style],['הבקשה',S.note],['פריטים',items.join(', ')],['ריצוף',nameOf(FLOORS,S.floor)],['חיפוי',S.clad&&S.clad!=='c-none'?nameOf(CLADS,S.clad):''],['צבע קירות',paint],['טפט',S.wp!=='wp-none'?nameOf(WALLP,S.wp):''],['מסגרות',S.frames.map(f=>nameOf(FRAMES,f)).join(', ')],['תאורה',S.light.map(l=>nameOf(LIGHT,l)).join(', ')],['פריטים שלך',S.refs.length?S.refs.length+' תמונות':''],['מה כתבת',S.extra]].filter(r=>r[1]);
   const hasKey=!!LS.get('key');
-  $('stepBody').innerHTML = `${hasKey?'':`<div class="err">צריך לחבר את ChatGPT לפני שאפשר ליצור הדמיות. <button type="button" class="ghost" id="goSet" style="margin-top:8px">להגדרות</button></div>`}
+  $('stepBody').innerHTML = `${hasKey?'':`<div class="note">בלחיצה על הכפתור נפתחת אפליקציית ChatGPT שלך עם התוכניות וכל ההוראות – בחינם, דרך המנוי.</div>`}
   <p class="lead">זה מה שנשלח ל-ChatGPT. אם צריך לשנות משהו – חזרה עם החץ למעלה.</p>
   <div class="sum">${rows.map(([a,b])=>`<div><b>${a}</b><span>${esc(b)}</span></div>`).join('')}</div>`;
   const g=$('goSet'); if(g) g.addEventListener('click',openSet);
@@ -594,7 +622,7 @@ async function oa(path, opts){
 }
 const TXT_MODELS = () => [LS.get('txt'),'gpt-5.6','gpt-5','gpt-4.1','gpt-4o'].filter(Boolean);
 async function detect(){
-  if(!KEY()){ S._detErr='ChatGPT עוד לא מחובר (בהגדרות), אז סמני בעצמך מה יש בתוכנית.'; return; }
+  if(!KEY()){ S._detErr='סמני מה יש בתוכנית – לחיצה על כל פריט שקיים.'; return; }
   const ids=Object.keys(ITEM_BY);
   const content=[{type:'text',text:`You are helping an interior designer. Look at these architectural plans (floor plans, wall elevations, electrical plans). The project is: ${(TYPES.find(t=>t.id===S.type)||{}).en||'interior'}. Identify which of these elements appear in the plans (as drawn symbols or labels, possibly in Hebrew). Allowed ids: ${ids.map(i=>i+' ('+ITEM_BY[i].en+')').join(', ')}. Answer ONLY JSON: {"items":["id",...]}`}];
   allPlans().forEach(u=>content.push({type:'image_url',image_url:{url:u}}));
@@ -609,7 +637,7 @@ async function detect(){
   }
   S._detErr = lastErr&&lastErr.status===401 ? 'המפתח של ChatGPT לא תקין – בדקי בהגדרות. בינתיים סמני בעצמך.' : 'לא הצלחתי לזהות אוטומטית הפעם – סמני בעצמך מה יש בתוכנית.';
 }
-function buildPrompt(viewIdx){
+function buildPrompt(viewIdx, hand=false){
   const typ=(TYPES.find(t=>t.id===S.type)||{}).en||'interior space';
   const items=Object.keys(S.items).filter(k=>S.items[k]).map(k=>ITEM_BY[k].en);
   const f=x=>x?x:null;
@@ -628,9 +656,11 @@ function buildPrompt(viewIdx){
     S.note?`The designer's request (in Hebrew – follow it): "${S.note}"`:null,
     S.refs.length?(()=>{const r=Math.min(8,S.refs.length), p=Math.min(allPlans().length,16-r); return `Images 1–${p} are the plans. Images ${p+1}–${p+r} are reference photos supplied by the designer of specific furniture, materials or finishes – include these exact items and materials faithfully (same shape, colour and texture) in the rendering.`})():null,
     S.extra?`The designer's personal instructions (in Hebrew – follow them carefully): "${S.extra}"`:null,
-    `Camera: ${VIEWS_EN[viewIdx%VIEWS_EN.length]}, 24mm lens, straight verticals, soft natural light, realistic materials and shadows, tasteful styling, no people, no text, no watermark.`
+    hand ? `Please generate ${handN()} separate landscape images (3:2), one after another, each from a different camera position: ${VIEWS_EN.slice(0,handN()).map((v,i)=>`${i+1}) ${v}`).join('; ')}. 24mm lens, straight verticals, soft natural light, realistic materials and shadows, tasteful styling, no people, no text, no watermark. Do not ask questions – just create the images.`
+         : `Camera: ${VIEWS_EN[viewIdx%VIEWS_EN.length]}, 24mm lens, straight verticals, soft natural light, realistic materials and shadows, tasteful styling, no people, no text, no watermark.`
   ];
-  return lines.filter(Boolean).join('\n');
+  const body=lines.filter(Boolean).join('\n');
+  return hand ? `הדמיה עבור יפה ברוינר – עיצוב פנים. בבקשה צור את ההדמיות לפי התוכניות והתמונות המצורפות:\n\n${body}` : body;
 }
 async function genOne(i){
   const models=[LS.get('img'),'gpt-image-2','gpt-image-1.5','gpt-image-1'].filter(Boolean);
@@ -648,7 +678,7 @@ async function genOne(i){
   throw lastErr;
 }
 async function generate(){
-  if(!KEY()){ openSet(); toast('צריך קודם לחבר את ChatGPT'); return; }
+  if(!KEY()){ handoff(); return; }
   show('prog'); $('progErr').innerHTML=''; $('progTitle').textContent='ההדמיות בהכנה';
   const n=+LS.get('n','2'); const out=[]; let errs=[];
   $('progText').textContent=`ChatGPT מעצב ${n>1?n+' הדמיות':'הדמיה'} לפי הבחירות שלך. זה לוקח בדרך כלל דקה עד שלוש – אפשר להשאיר את המסך פתוח.`;
@@ -662,6 +692,32 @@ async function generate(){
   try{ await dbPut({id:Date.now(),date:new Date().toISOString(),title,imgs,state:{...S,plans:{top:[],walls:[],other:[]},refs:[]}}); }catch(_){}
   showResults(imgs,title);
 }
+
+/* ================= HANDOFF (free, via the ChatGPT app) ================= */
+const handN = () => Math.min(4,+LS.get('n','2')||2);
+function handFiles(){
+  const refs=S.refs.slice(0,8), plans=allPlans().slice(0,16-refs.length);
+  return [...plans.map((u,k)=>new File([dataToBlob(u)],`plan-${k+1}.jpg`,{type:'image/jpeg'})), ...refs.map((u,k)=>new File([dataToBlob(u)],`reference-${k+1}.jpg`,{type:'image/jpeg'}))];
+}
+function copyText(t){ try{ navigator.clipboard.writeText(t).then(()=>toast('הטקסט הועתק'),()=>{}); }catch(_){} }
+function sendToApp(){
+  const text=buildPrompt(0,true); const files=handFiles();
+  copyText(text);
+  if(navigator.canShare && navigator.canShare({files})){ navigator.share({files,text}).catch(()=>{}); }
+  else { toast('הטקסט הועתק – צרפי את התוכניות ב-ChatGPT'); window.open('https://chatgpt.com/','_blank'); }
+  $('handText').textContent=text;
+}
+function handoff(){ sendToApp(); show('hand'); }
+$('handAgain').addEventListener('click',sendToApp);
+$('handCopy').addEventListener('click',()=>copyText(buildPrompt(0,true)));
+$('handBack').addEventListener('click',()=>go(6));
+$('handIn').addEventListener('change',async e=>{
+  const files=[...e.target.files]; if(!files.length)return; toast('טוען...');
+  const imgs=await readFiles(files); if(!imgs.length)return;
+  const title=[nameOf(TYPES,S.type),S.rooms.join(', ')].filter(Boolean).join(' – ')||'הדמיה';
+  try{ await dbPut({id:Date.now(),date:new Date().toISOString(),title,imgs,state:{...S,plans:{top:[],walls:[],other:[]},refs:[]}}); }catch(_){}
+  lastResults=imgs; showResults(imgs,title);
+});
 
 /* ================= RESULTS & SHARING ================= */
 function showResults(imgs,title){
@@ -727,12 +783,12 @@ $('nextBtn').addEventListener('click',async()=>{
     await detect(); detecting=false; if(step===2) rItems();
     return;
   }
-  if(step===6){ generate(); return; }
+  if(step===6){ if(KEY()) generate(); else handoff(); return; }
   go(step+1);
 });
 $('homeBtn').addEventListener('click',()=>{ show('home'); renderRecent(); });
 $('newBtn').addEventListener('click',()=>{ S=fresh(); wallTab='floor'; go(0); });
-$('againBtn').addEventListener('click',()=>{ if(allPlans().length) generate(); else { toast('אין כאן את התוכניות המקוריות – מתחילים הדמיה חדשה'); S=fresh(); go(0);} });
+$('againBtn').addEventListener('click',()=>{ if(allPlans().length) (KEY()?generate():handoff()); else { toast('אין כאן את התוכניות המקוריות – מתחילים הדמיה חדשה'); S=fresh(); go(0);} });
 $('lbClose').addEventListener('click',()=>$('lb').classList.remove('on'));
 $('lb').addEventListener('click',e=>{ if(e.target.id==='lb') $('lb').classList.remove('on'); });
 renderRecent();
