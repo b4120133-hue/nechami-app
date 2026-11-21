@@ -306,7 +306,7 @@ const ITEMS = [
 const ITEM_BY = {}; ITEMS.forEach(g=>g.list.forEach(([id,t,en])=>ITEM_BY[id]={t,en}));
 
 /* ---- texture generators (SVG data URIs) ---- */
-const U = s => `url("data:image/svg+xml,${encodeURIComponent(s)}")`;
+const U = s => `url('data:image/svg+xml,${encodeURIComponent(s).replace(/'/g,'%27')}')`;
 const SV = (w,h,inner) => `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">${inner}</svg>`;
 const marble = (base,vein,seed=3,fx=.006,fy=.02) => U(SV(240,180,`<filter id="f" x="0" y="0" width="100%" height="100%"><feTurbulence type="turbulence" baseFrequency="${fx} ${fy}" numOctaves="5" seed="${seed}"/><feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -7 0 0 0 1.05"/></filter><rect width="240" height="180" fill="${base}"/><rect width="240" height="180" fill="${vein}" filter="url(#f)" opacity=".75"/>`));
 const noise = (base,ink,op=.35,f='.9',oct=3) => U(SV(240,180,`<filter id="n" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="${f}" numOctaves="${oct}" seed="7"/><feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1.6 0 0 0 -.6"/></filter><rect width="240" height="180" fill="${base}"/><rect width="240" height="180" fill="${ink}" filter="url(#n)" opacity="${op}"/>`));
