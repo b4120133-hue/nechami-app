@@ -408,7 +408,7 @@ const VIEWS = ['נוף רחב מהכניסה','זווית מהפינה','מבט 
 const VIEWS_EN = ['wide eye-level view from the entrance','three-quarter view from a corner of the room','view from the opposite side of the room','close-up detail shot highlighting materials and finishes'];
 
 /* ================= STATE ================= */
-const fresh = () => ({plans:{top:[],walls:[],other:[]}, type:'', rooms:[], style:'', note:'', items:{}, detected:[], floor:'', clad:'', paint:'', wp:'wp-none', frames:[], light:[], extra:''});
+const fresh = () => ({plans:{top:[],walls:[],other:[]}, type:'', rooms:[], style:'', note:'', items:{}, detected:[], floor:'', clad:'', paint:'', wp:'wp-none', frames:[], light:[], refs:[], extra:''});
 let S = fresh(); let step = 0; let lastResults = []; let wallTab = 'floor';
 const $ = id => document.getElementById(id);
 const LS = { get(k,d=''){try{return localStorage.getItem('yb-'+k)??d}catch(_){return d}}, set(k,v){try{localStorage.setItem('yb-'+k,v)}catch(_){}} };
@@ -456,7 +456,8 @@ const STEPS = [
   {t:'מה עושים?', render:rBrief, ok:()=>!!S.type, next:'שליחה והמשך'},
   {t:'מה יש בתוכנית', render:rItems, ok:()=>true, next:'המשך לריצוף וקירות'},
   {t:'ריצוף וקירות', render:rWalls, ok:()=>true, next:'המשך לתאורה'},
-  {t:'תאורה וחשמל', render:rLight, ok:()=>true, next:'המשך לסיכום'},
+  {t:'תאורה וחשמל', render:rLight, ok:()=>true, next:'המשך'},
+  {t:'חומרים ופריטים שלך', render:rRefs, ok:()=>true, next:'המשך לסיכום'},
   {t:'סיכום', render:rSum, ok:()=>true, next:'צרו לי הדמיות'}
 ];
 function go(n){
@@ -473,22 +474,27 @@ function rPlans(){
   $('stepBody').innerHTML = `<p class="lead">מעלים מהגלריה כמה תוכניות שרוצים. כל סוג תוכנית במקום שלו – ככה ChatGPT מבין בדיוק מה זה.</p>
   <div class="slots">${SLOTS.map(([k,t,d,ic])=>`<div class="slot"><h3><svg class="ic" viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#7A5634" stroke-width="1.4" stroke-linejoin="round" aria-hidden="true">${ic}</svg>${t}</h3><p>${d}</p>
     <div class="thumbs">${S.plans[k].map((src,i)=>`<div class="thumb"><img src="${src}" alt="${t} ${i+1}"><button type="button" data-del="${k}:${i}" aria-label="מחיקה"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>`).join('')}</div>
-    <label class="add"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>${S.plans[k].length?'עוד תמונה':'העלאה מהגלריה'}<input type="file" accept="image/*,application/pdf,.pdf" multiple data-slot="${k}" aria-label="העלאת ${t}"></label></div>`).join('')}</div>
+    <label class="add"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>${S.plans[k].length?'עוד קובץ':'העלאת תמונה או PDF'}<input type="file" accept="image/*,application/pdf,.pdf" multiple data-slot="${k}" aria-label="העלאת ${t}"></label></div>`).join('')}</div>
   <p class="muted" style="margin-top:18px">אפשר להעלות תמונות מהגלריה או קבצי PDF – כל עמוד ב-PDF נכנס כתוכנית נפרדת.</p>`;
   $('stepBody').querySelectorAll('input[type=file]').forEach(inp=>inp.addEventListener('change',async e=>{
     const k=e.target.dataset.slot; const files=[...e.target.files]; if(!files.length)return;
     toast('טוען...');
-    for(const f of files){
-      const isPdf = f.type==='application/pdf' || /\.pdf$/i.test(f.name);
-      try{
-        if(isPdf){ toast('פותח את ה-PDF...'); const pages=await pdfToImages(f); S.plans[k].push(...pages); if(pages.length>1) toast(`נוספו ${pages.length} עמודים מה-PDF`); }
-        else S.plans[k].push(await shrink(f));
-      }catch(_){ toast(isPdf?'לא הצלחתי לפתוח את קובץ ה-PDF':'לא הצלחתי לפתוח את אחת התמונות'); }
-    }
+    S.plans[k].push(...await readFiles(files));
     if(allPlans().length>16) toast('שימי לב: ל-ChatGPT נשלחות עד 16 תוכניות');
     rPlans(); refreshNext();
   }));
   $('stepBody').querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click',()=>{const [k,i]=b.dataset.del.split(':'); S.plans[k].splice(+i,1); rPlans(); refreshNext();}));
+}
+async function readFiles(files){
+  const out=[];
+    for(const f of files){
+      const isPdf = f.type==='application/pdf' || /\.pdf$/i.test(f.name);
+      try{
+        if(isPdf){ toast('פותח את ה-PDF...'); const pages=await pdfToImages(f); out.push(...pages); if(pages.length>1) toast(`נוספו ${pages.length} עמודים מה-PDF`); }
+        else out.push(await shrink(f));
+      }catch(_){ toast(isPdf?'לא הצלחתי לפתוח את קובץ ה-PDF':'לא הצלחתי לפתוח את אחת התמונות'); }
+    }
+  return out;
 }
 
 /* ---- step 2: brief ---- */
@@ -548,8 +554,19 @@ const pickedMark = k => { const v=S[k]; const on=Array.isArray(v)?v.length:(k===
 /* ---- step 5: lighting ---- */
 function rLight(){
   $('stepBody').innerHTML = `<div class="sec"><h3>תאורה</h3><p>אפשר לבחור כמה</p><div class="grid">${LIGHT.map(x=>`<button type="button" class="tile" data-l="${x.id}" aria-pressed="${S.light.includes(x.id)}">${P(x.ic)}${x.t}</button>`).join('')}</div></div>
-  <div class="sec"><h3>עוד משהו להוסיף להדמיה?</h3><p>רהיט מסוים, צבע של ספה, וילונות, צמחים, אומנות על הקירות...</p><textarea id="extra" placeholder="כתבי כאן...">${esc(S.extra)}</textarea></div>`;
+`;
   $('stepBody').querySelectorAll('[data-l]').forEach(b=>b.addEventListener('click',()=>{const v=b.dataset.l; S.light=S.light.includes(v)?S.light.filter(x=>x!==v):[...S.light,v]; b.setAttribute('aria-pressed',S.light.includes(v));}));
+}
+
+/* ---- step 6: own materials & free text ---- */
+function rRefs(){
+  $('stepBody').innerHTML = `<div class="sec"><h3>תמונות של חומרים ופריטים</h3><p>יש כיסא, ספה, אריח, בד או מנורה שאת רוצה שיופיעו בדיוק כך בהדמיה? העלי תמונה או PDF מהקטלוג.</p>
+    <div class="slot"><div class="thumbs">${S.refs.map((src,i)=>`<div class="thumb"><img src="${src}" alt="פריט ${i+1}"><button type="button" data-rdel="${i}" aria-label="מחיקה"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>`).join('')}</div>
+    <label class="add"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>${S.refs.length?'עוד תמונה':'העלאת תמונות או PDF'}<input type="file" accept="image/*,application/pdf,.pdf" multiple id="refIn" aria-label="העלאת תמונות של חומרים ופריטים"></label></div></div>
+  <div class="sec"><h3>כתבי לי כל מה שתרצי</h3><p>מה לשים איפה, איזה צבע לספה, וילונות, צמחים, אומנות על הקירות, מה לא לעשות – הכול. למשל: "את הכיסאות מהתמונה לשים סביב שולחן האוכל"</p>
+    <textarea id="extra" style="min-height:200px" placeholder="כתבי כאן...">${esc(S.extra)}</textarea></div>`;
+  $('refIn').addEventListener('change',async e=>{ const files=[...e.target.files]; if(!files.length)return; toast('טוען...'); S.refs.push(...await readFiles(files)); if(S.refs.length>8) toast('ל-ChatGPT נשלחות עד 8 תמונות של פריטים'); rRefs(); });
+  $('stepBody').querySelectorAll('[data-rdel]').forEach(b=>b.addEventListener('click',()=>{ S.refs.splice(+b.dataset.rdel,1); rRefs(); }));
   $('extra').addEventListener('input',e=>S.extra=e.target.value);
 }
 
@@ -559,7 +576,7 @@ function rSum(){
   const typ=nameOf(TYPES,S.type);
   const items=Object.keys(S.items).filter(k=>S.items[k]).map(k=>ITEM_BY[k].t);
   const paint=(PAINT.find(p=>p[0]===S.paint)||[])[1];
-  const rows=[['תוכניות',`${allPlans().length} תמונות`],['פרויקט',[typ,S.rooms.join(', ')].filter(Boolean).join(' – ')],['סגנון',S.style],['הבקשה',S.note],['פריטים',items.join(', ')],['ריצוף',nameOf(FLOORS,S.floor)],['חיפוי',S.clad&&S.clad!=='c-none'?nameOf(CLADS,S.clad):''],['צבע קירות',paint],['טפט',S.wp!=='wp-none'?nameOf(WALLP,S.wp):''],['מסגרות',S.frames.map(f=>nameOf(FRAMES,f)).join(', ')],['תאורה',S.light.map(l=>nameOf(LIGHT,l)).join(', ')],['תוספות',S.extra]].filter(r=>r[1]);
+  const rows=[['תוכניות',`${allPlans().length} תמונות`],['פרויקט',[typ,S.rooms.join(', ')].filter(Boolean).join(' – ')],['סגנון',S.style],['הבקשה',S.note],['פריטים',items.join(', ')],['ריצוף',nameOf(FLOORS,S.floor)],['חיפוי',S.clad&&S.clad!=='c-none'?nameOf(CLADS,S.clad):''],['צבע קירות',paint],['טפט',S.wp!=='wp-none'?nameOf(WALLP,S.wp):''],['מסגרות',S.frames.map(f=>nameOf(FRAMES,f)).join(', ')],['תאורה',S.light.map(l=>nameOf(LIGHT,l)).join(', ')],['פריטים שלך',S.refs.length?S.refs.length+' תמונות':''],['מה כתבת',S.extra]].filter(r=>r[1]);
   const hasKey=!!LS.get('key');
   $('stepBody').innerHTML = `${hasKey?'':`<div class="err">צריך לחבר את ChatGPT לפני שאפשר ליצור הדמיות. <button type="button" class="ghost" id="goSet" style="margin-top:8px">להגדרות</button></div>`}
   <p class="lead">זה מה שנשלח ל-ChatGPT. אם צריך לשנות משהו – חזרה עם החץ למעלה.</p>
@@ -609,7 +626,8 @@ function buildPrompt(viewIdx){
     S.frames.length?`Decorative wall details: ${S.frames.map(id=>(FRAMES.find(x=>x.id===id)||{}).en).join('; ')}.`:null,
     S.light.length?`Lighting: ${S.light.map(id=>(LIGHT.find(x=>x.id===id)||{}).en).join('; ')}.`:null,
     S.note?`The designer's request (in Hebrew – follow it): "${S.note}"`:null,
-    S.extra?`Additional wishes (in Hebrew – follow them): "${S.extra}"`:null,
+    S.refs.length?(()=>{const r=Math.min(8,S.refs.length), p=Math.min(allPlans().length,16-r); return `Images 1–${p} are the plans. Images ${p+1}–${p+r} are reference photos supplied by the designer of specific furniture, materials or finishes – include these exact items and materials faithfully (same shape, colour and texture) in the rendering.`})():null,
+    S.extra?`The designer's personal instructions (in Hebrew – follow them carefully): "${S.extra}"`:null,
     `Camera: ${VIEWS_EN[viewIdx%VIEWS_EN.length]}, 24mm lens, straight verticals, soft natural light, realistic materials and shadows, tasteful styling, no people, no text, no watermark.`
   ];
   return lines.filter(Boolean).join('\n');
@@ -620,7 +638,9 @@ async function genOne(i){
   for(const model of models){
     const fd=new FormData();
     fd.append('model',model); fd.append('prompt',buildPrompt(i)); fd.append('size','1536x1024'); fd.append('quality',LS.get('q','medium')); fd.append('n','1');
-    allPlans().slice(0,16).forEach((u,k)=>fd.append('image[]',dataToBlob(u),`plan-${k+1}.jpg`));
+    const refs=S.refs.slice(0,8), plans=allPlans().slice(0,16-refs.length);
+    plans.forEach((u,k)=>fd.append('image[]',dataToBlob(u),`plan-${k+1}.jpg`));
+    refs.forEach((u,k)=>fd.append('image[]',dataToBlob(u),`reference-${k+1}.jpg`));
     try{ const j=await oa('images/edits',{method:'POST',body:fd}); const d=j.data&&j.data[0]; if(!d)throw new Error('לא התקבלה תמונה');
       return d.b64_json?'data:image/png;base64,'+d.b64_json:d.url;
     }catch(e){ lastErr=e; if(e.status===401||e.status===429||/safety|moderation/i.test(e.message))break; if(!/model|does not exist|not found|access/i.test(e.message))break; }
@@ -636,10 +656,10 @@ async function generate(){
   const imgs=out.filter(Boolean);
   if(!imgs.length){ const e=errs[0]||{}; const msg = e.status===401?'המפתח של ChatGPT לא תקין. בדקי אותו בהגדרות.': e.status===429?'נגמרה היתרה או שיש עומס בחשבון ChatGPT. נסי שוב עוד מעט.': /verif/i.test(e.message||'')?'החשבון ב-OpenAI צריך אימות ארגון כדי ליצור תמונות. זה נעשה פעם אחת באתר platform.openai.com.' : 'משהו השתבש: '+esc(e.message||'');
     $('progTitle').textContent='לא הצלחנו הפעם'; $('progText').textContent=''; $('progErr').innerHTML=`<div class="err">${msg}</div><div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap"><button class="big" type="button" id="retry" style="max-width:240px">לנסות שוב</button><button class="ghost" type="button" id="backSum">חזרה לבחירות</button></div>`;
-    $('retry').onclick=generate; $('backSum').onclick=()=>go(5); return; }
+    $('retry').onclick=generate; $('backSum').onclick=()=>go(6); return; }
   lastResults=imgs;
   const title=[nameOf(TYPES,S.type),S.rooms.join(', ')].filter(Boolean).join(' – ')||'הדמיה';
-  try{ await dbPut({id:Date.now(),date:new Date().toISOString(),title,imgs,state:{...S,plans:{top:[],walls:[],other:[]}}}); }catch(_){}
+  try{ await dbPut({id:Date.now(),date:new Date().toISOString(),title,imgs,state:{...S,plans:{top:[],walls:[],other:[]},refs:[]}}); }catch(_){}
   showResults(imgs,title);
 }
 
@@ -707,7 +727,7 @@ $('nextBtn').addEventListener('click',async()=>{
     await detect(); detecting=false; if(step===2) rItems();
     return;
   }
-  if(step===5){ generate(); return; }
+  if(step===6){ generate(); return; }
   go(step+1);
 });
 $('homeBtn').addEventListener('click',()=>{ show('home'); renderRecent(); });
