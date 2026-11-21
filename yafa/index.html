@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>הדמיות של יפה ברוינר</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="הדמיות">
+<meta name="theme-color" content="#F1EAE1">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300;400;500&family=Assistant:wght@300;400;600&display=swap">
+<style>
+/* VOICE: quiet, warm, elegant – an interior studio's front door
+   IDEA: the studio's lookbook cover – a finished room beside the sign-in card
+   PICTURE: the ChatGPT living-room render, full height
+   COLOUR and TYPE: linen ground, walnut ink, terracotta-brown button; Frank Ruhl Libre + Assistant
+   LAYOUT: photo | panel on a landscape tablet, photo on top when upright or on a phone */
+:root{color-scheme:light;--bg:#F1EAE1;--panel:#F6F1EA;--ink:#3B2F27;--soft:#6E6155;--line:#D9CCBB;--field:#FBF8F3;--btn:#8A5A3C;--btn-h:#744A30;--gold:#B8946A}
+*{box-sizing:border-box;min-width:0}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 'Assistant',system-ui,sans-serif;overflow-x:clip;-webkit-tap-highlight-color:transparent}
+.app{min-height:100dvh;display:grid;grid-template-columns:minmax(380px,42%) minmax(0,1fr)}
+.photo{position:relative;overflow:hidden;background:#C9B49A;order:2}
+.photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:40% 50%;animation:settle 1.6s ease-out both}
+@keyframes settle{from{transform:scale(1.05);opacity:.4}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.photo img{animation:none}}
+.panel{background:var(--panel);display:flex;flex-direction:column;align-items:center;justify-content:space-between;gap:32px;padding:clamp(32px,6vh,64px) clamp(28px,5vw,64px) clamp(24px,4vh,40px);order:1}
+.top{width:100%;max-width:420px;display:flex;flex-direction:column;align-items:center;gap:clamp(18px,3vh,28px)}
+.logo{width:clamp(130px,16vw,190px);height:auto;display:block}
+h1{margin:0;font-family:'Frank Ruhl Libre',serif;font-weight:400;font-size:clamp(30px,3.4vw,40px);line-height:1.1;text-align:center;text-wrap:balance}
+.rule{width:96px;height:1px;background:var(--gold);margin-top:-4px}
+form{width:100%;display:flex;flex-direction:column;gap:14px;margin-top:8px}
+.field{display:flex;align-items:center;gap:12px;height:58px;padding:0 18px;border:1px solid var(--line);border-radius:10px;background:var(--field);transition:border-color .2s}
+.field:focus-within{border-color:var(--ink)}
+.field svg{flex:none}
+.field input{flex:1;height:100%;border:0;background:transparent;font:inherit;font-size:17px;color:var(--ink);outline:none}
+.field input::placeholder{color:#9A8F83}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.btn{height:60px;border:0;border-radius:10px;background:var(--btn);color:#fff;font:600 19px 'Assistant',sans-serif;letter-spacing:.03em;cursor:pointer;margin-top:10px;transition:background .2s}
+.btn:hover{background:var(--btn-h)}
+.btn:focus-visible,.card:focus-visible,.link:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.msg{min-height:22px;margin:0;font-size:15px;color:#8A3B2A;text-align:center}
+.steps{display:flex;align-items:flex-start;justify-content:center;gap:clamp(8px,2vw,18px);width:100%;max-width:440px;color:var(--soft)}
+.step{display:flex;flex-direction:column;align-items:center;gap:8px;width:104px;text-align:center;font-size:14px;line-height:1.3}
+.chev{margin-top:12px;flex:none}
+/* welcome view */
+.home{display:none;width:100%;max-width:440px;flex-direction:column;align-items:center;gap:22px}
+.app.in .top{display:none}.app.in .home{display:flex}.app.in .steps{display:none}
+.home h2{margin:0;font-family:'Frank Ruhl Libre',serif;font-weight:400;font-size:clamp(30px,3.4vw,40px)}
+.home p{margin:0;color:var(--soft);text-align:center}
+.cards{width:100%;display:flex;flex-direction:column;gap:12px}
+.card{display:flex;align-items:center;gap:16px;width:100%;min-height:76px;padding:14px 18px;border:1px solid var(--line);border-radius:12px;background:var(--field);font:inherit;color:var(--ink);text-align:right;cursor:pointer}
+.card b{display:block;font-weight:600;font-size:18px}
+.card span{font-size:14px;color:var(--soft)}
+.card .ic{width:48px;height:48px;border-radius:50%;background:#EFE5D8;display:flex;align-items:center;justify-content:center;flex:none}
+.soon{margin-inline-start:auto;font-size:13px;color:var(--soft);border:1px solid var(--line);border-radius:999px;padding:3px 10px;white-space:nowrap}
+.link{background:none;border:0;font:inherit;font-size:15px;color:#7A4E33;cursor:pointer;min-height:44px}
+@media (max-width:900px),(orientation:portrait){
+  .app{grid-template-columns:minmax(0,1fr);grid-template-rows:clamp(240px,40dvh,520px) auto}
+  .photo{order:1}.panel{order:2;border-radius:24px 24px 0 0;margin-top:-24px;position:relative}
+}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <main class="panel">
+    <div class="top">
+      <img class="logo" src="logo.png" alt="YB – יפה ברוינר" width="238" height="176">
+      <h1>הדמיות של יפה ברוינר</h1>
+      <div class="rule" aria-hidden="true"></div>
+      <form id="login" novalidate>
+        <label class="field">
+          <span class="sr">אימייל</span>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9A8670" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+          <input id="email" type="email" placeholder="אימייל" autocomplete="email">
+        </label>
+        <label class="field">
+          <span class="sr">סיסמה</span>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9A8670" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+          <input id="pass" type="password" placeholder="סיסמה" autocomplete="current-password">
+        </label>
+        <button class="btn" type="submit">כניסה</button>
+        <p class="msg" id="msg" role="status"></p>
+      </form>
+    </div>
+
+    <section class="home" aria-live="polite">
+      <img class="logo" src="logo.png" alt="" width="238" height="176" style="width:110px">
+      <h2>שלום יפה</h2>
+      <p>מה נעשה היום?</p>
+      <div class="cards">
+        <button class="card" type="button"><span class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#8A6A4A" stroke-width="1.4" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M3 12h7v9M10 3v5M14 12h7M14 12v4"/></svg></span><div><b>העלאת תוכנית</b><span>תמונה או PDF של התוכנית</span></div><em class="soon">בקרוב</em></button>
+        <button class="card" type="button"><span class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#8A6A4A" stroke-width="1.4" stroke-linejoin="round" aria-hidden="true"><path d="M4 16c0-3 2-4 4-4h8c2 0 4 1 4 4v2H4z"/><path d="M6 12V9a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v3M6 18v2M18 18v2"/></svg></span><div><b>בחירת סגנון וחומרים</b><span>סגנון, צבעים, ריצוף ותאורה</span></div><em class="soon">בקרוב</em></button>
+        <button class="card" type="button"><span class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#8A6A4A" stroke-width="1.4" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="1"/><path d="M3 16l5-5 4 4 3-3 6 6"/><circle cx="16" cy="9" r="1.5"/></svg></span><div><b>ההדמיות שלי</b><span>כל ההדמיות שנוצרו</span></div><em class="soon">בקרוב</em></button>
+      </div>
+      <button class="link" type="button" id="out">יציאה</button>
+    </section>
+
+    <div class="steps" aria-label="איך זה עובד">
+      <div class="step"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#8A6A4A" stroke-width="1.2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M3 12h7v9M10 3v5M14 12h7M14 12v4"/></svg>העלאת תוכנית דירה</div>
+      <svg class="chev" width="12" height="24" viewBox="0 0 12 24" fill="none" stroke="#B8A58E" stroke-width="1.5" aria-hidden="true"><path d="M9 7l-5 5 5 5"/></svg>
+      <div class="step"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#8A6A4A" stroke-width="1.2" stroke-linejoin="round" aria-hidden="true"><path d="M5 20l3-15 4 1-3 15zM10 6l5-1 3 13-5 1M13 5l5-2 3 12-3 1"/></svg>בחירת סגנון וחומרים</div>
+      <svg class="chev" width="12" height="24" viewBox="0 0 12 24" fill="none" stroke="#B8A58E" stroke-width="1.5" aria-hidden="true"><path d="M9 7l-5 5 5 5"/></svg>
+      <div class="step"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#8A6A4A" stroke-width="1.2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="1"/><path d="M3 16l5-5 4 4 3-3 6 6"/><circle cx="16" cy="9" r="1.5"/></svg>קבלת הדמיות</div>
+    </div>
+  </main>
+  <div class="photo"><img src="room.jpg" alt="הדמיה של סלון מעוצב באור טבעי, ספה בהירה ושולחן עגול מעץ"></div>
+</div>
+<script>
+{
+  const app=document.getElementById('app'),msg=document.getElementById('msg');
+  document.getElementById('login').addEventListener('submit',e=>{
+    e.preventDefault();
+    const em=document.getElementById('email').value.trim();
+    if(!em){msg.textContent='נא להזין אימייל';document.getElementById('email').focus();return;}
+    msg.textContent='';app.classList.add('in');
+    try{localStorage.setItem('yb-in','1')}catch(_){}
+  });
+  document.getElementById('out').addEventListener('click',()=>{app.classList.remove('in');try{localStorage.removeItem('yb-in')}catch(_){}});
+  try{if(localStorage.getItem('yb-in')==='1')app.classList.add('in')}catch(_){}
+}
+</script>
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})})}</script>
+</body>
+</html>
