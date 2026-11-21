@@ -123,6 +123,14 @@ textarea:focus,.inp:focus{outline:2px solid var(--gold);outline-offset:1px}
 .adder .row{display:flex;gap:10px}
 .adder .row .inp{flex:1}
 .adder .row .big{width:auto;height:auto;min-height:52px;padding:0 22px;font-size:17px;flex:none}
+.refs{display:flex;flex-direction:column;gap:14px}
+.refcard{display:grid;grid-template-columns:180px minmax(0,1fr);gap:16px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px}
+.refimg{position:relative;border-radius:12px;overflow:hidden;background:#fff;border:1px solid var(--line);aspect-ratio:1}
+.refimg img{width:100%;height:100%;object-fit:contain}
+.refnum{position:absolute;bottom:8px;right:8px;width:28px;height:28px;border-radius:50%;background:var(--btn);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:14px}
+.refbody{display:flex;flex-direction:column;gap:10px}
+.refbody .chip{min-height:44px;font-size:15px;padding:0 14px}
+@media (max-width:600px){.refcard{grid-template-columns:minmax(0,1fr)}.refimg{max-width:220px}}
 .toast{position:fixed;bottom:110px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 20px;border-radius:999px;font-size:15px;z-index:30;display:none}
 .toast.on{display:block}
 :focus-visible{outline:2px solid var(--ink);outline-offset:2px}
@@ -539,7 +547,7 @@ const STEPS = [
   {t:'מה עושים?', render:rBrief, ok:()=>!!S.type, next:'שליחה והמשך'},
   {t:'מה יש בתוכנית', render:rItems, ok:()=>true, next:'המשך לריצוף וקירות'},
   {t:'ריצוף וקירות', render:rWalls, ok:()=>true, next:'המשך לתאורה'},
-  {t:'תאורה וחשמל', render:rLight, ok:()=>true, next:'המשך'},
+  {t:'תאורה וחשמל', render:rLight, ok:()=>true, next:'המשך לפריטים וחומרים שלך'},
   {t:'חומרים ופריטים שלך', render:rRefs, ok:()=>true, next:'המשך לסיכום'},
   {t:'סיכום', render:rSum, ok:()=>true, next:()=>KEY()?'צרו לי הדמיות':'שליחה ל-ChatGPT'}
 ];
@@ -700,15 +708,29 @@ function rLight(){
   $('stepBody').querySelectorAll('[data-l]').forEach(b=>b.addEventListener('click',()=>{const v=b.dataset.l; S.light=S.light.includes(v)?S.light.filter(x=>x!==v):[...S.light,v]; b.setAttribute('aria-pressed',S.light.includes(v));}));
 }
 
-/* ---- step 6: own materials & free text ---- */
+/* ---- step 6: own items & materials, each with its own instructions ---- */
+const REFMODES=[['exact','בדיוק כמו בתמונה','use this exact item exactly as shown'],['similar','משהו דומה','use a similar item in the same spirit and style'],['change','כמו בתמונה, עם שינויים','use this item but apply the changes in the note']];
 function rRefs(){
-  $('stepBody').innerHTML = `<div class="sec"><h3>תמונות של חומרים ופריטים</h3><p>יש כיסא, ספה, אריח, בד או מנורה שאת רוצה שיופיעו בדיוק כך בהדמיה? העלי תמונה או PDF מהקטלוג.</p>
-    <div class="slot"><div class="thumbs">${S.refs.map((src,i)=>`<div class="thumb"><img src="${src}" alt="פריט ${i+1}"><button type="button" data-rdel="${i}" aria-label="מחיקה"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>`).join('')}</div>
-    <label class="add"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>${S.refs.length?'עוד תמונה':'העלאת תמונות או PDF'}<input type="file" accept="image/*,application/pdf,.pdf" multiple id="refIn" aria-label="העלאת תמונות של חומרים ופריטים"></label></div></div>
-  <div class="sec"><h3>כתבי לי כל מה שתרצי</h3><p>מה לשים איפה, איזה צבע לספה, וילונות, צמחים, אומנות על הקירות, מה לא לעשות – הכול. למשל: "את הכיסאות מהתמונה לשים סביב שולחן האוכל"</p>
-    <textarea id="extra" style="min-height:200px" placeholder="כתבי כאן...">${esc(S.extra)}</textarea></div>`;
-  $('refIn').addEventListener('change',async e=>{ const files=[...e.target.files]; if(!files.length)return; toast('טוען...'); S.refs.push(...await readFiles(files)); if(S.refs.length>8) toast('ל-ChatGPT נשלחות עד 8 תמונות של פריטים'); rRefs(); });
-  $('stepBody').querySelectorAll('[data-rdel]').forEach(b=>b.addEventListener('click',()=>{ S.refs.splice(+b.dataset.rdel,1); rRefs(); }));
+  const card=(r,i)=>`<div class="refcard">
+    <div class="refimg"><img src="${r.src}" alt="פריט ${i+1}"><button type="button" class="cdel" data-rdel="${i}" aria-label="מחיקת הפריט"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button><span class="refnum">${i+1}</span></div>
+    <div class="refbody">
+      <label class="sr" for="rname${i}" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">מה זה</label>
+      <input class="inp" id="rname${i}" data-rname="${i}" value="${esc(r.name)}" placeholder="מה זה? למשל: כיסאות לפינת האוכל">
+      <div class="chips">${REFMODES.map(([m,t])=>`<button type="button" class="chip" data-rmode="${i}:${m}" aria-pressed="${r.mode===m}">${t}</button>`).join('')}</div>
+      <label class="sr" for="rnote${i}" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">מה לקחת ומה לשנות</label>
+      <textarea id="rnote${i}" data-rnote="${i}" style="min-height:90px" placeholder="מה לקחת מהתמונה ומה לשנות? למשל: אותו צבע ריפוד, אבל רגליים בשחור מט">${esc(r.note)}</textarea>
+    </div></div>`;
+  $('stepBody').innerHTML = `<div class="sec"><h3>פריטים וחומרים שלך</h3><p>שולחן, כיסא, ספה, אריח, בד, מנורה – העלי תמונה או PDF, ולכל פריט כתבי מה זה, איפה לשים ומה לשנות.</p>
+    <div class="refs">${S.refs.map(card).join('')}</div>
+    <label class="add" style="margin-top:12px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>${S.refs.length?'הוספת עוד פריט':'העלאת תמונה או PDF של פריט'}<input type="file" accept="image/*,application/pdf,.pdf" multiple id="refIn" aria-label="העלאת תמונות של פריטים וחומרים"></label></div>
+  <div class="sec"><h3>כתבי לי כל מה שתרצי</h3><p>על כל ההדמיה: מה לשים איפה, צמחים, אומנות על הקירות, אווירה, מה לא לעשות – הכול.</p>
+    <textarea id="extra" style="min-height:180px" placeholder="כתבי כאן...">${esc(S.extra)}</textarea></div>`;
+  const B=$('stepBody');
+  $('refIn').addEventListener('change',async e=>{ const files=[...e.target.files]; if(!files.length)return; toast('טוען...'); const imgs=await readFiles(files); S.refs.push(...imgs.map(src=>({src,name:'',mode:'exact',note:''}))); if(S.refs.length>8) toast('ל-ChatGPT נשלחים עד 8 פריטים'); rRefs(); const last=B.querySelector(`[data-rname="${S.refs.length-imgs.length}"]`); if(last) last.focus(); });
+  B.querySelectorAll('[data-rdel]').forEach(b=>b.addEventListener('click',()=>{ S.refs.splice(+b.dataset.rdel,1); rRefs(); }));
+  B.querySelectorAll('[data-rname]').forEach(el=>el.addEventListener('input',()=>S.refs[+el.dataset.rname].name=el.value));
+  B.querySelectorAll('[data-rnote]').forEach(el=>el.addEventListener('input',()=>{ const r=S.refs[+el.dataset.rnote]; r.note=el.value; if(el.value.trim() && r.mode==='exact'){ r.mode='change'; B.querySelectorAll(`[data-rmode^="${el.dataset.rnote}:"]`).forEach(c=>c.setAttribute('aria-pressed',c.dataset.rmode.endsWith(':change'))); } }));
+  B.querySelectorAll('[data-rmode]').forEach(b=>b.addEventListener('click',()=>{ const [i,m]=b.dataset.rmode.split(':'); S.refs[+i].mode=m; B.querySelectorAll(`[data-rmode^="${i}:"]`).forEach(c=>c.setAttribute('aria-pressed',c.dataset.rmode===b.dataset.rmode)); }));
   $('extra').addEventListener('input',e=>S.extra=e.target.value);
 }
 
@@ -718,7 +740,7 @@ function rSum(){
   const typ=nameOf(TYPES,S.type);
   const items=Object.keys(S.items).filter(k=>S.items[k]).map(k=>ITEM_BY[k].t);
   const paint=(PAINT.find(p=>p[0]===S.paint)||[])[1];
-  const rows=[['תוכניות',`${allPlans().length} תמונות`],['פרויקט',[typ,S.rooms.join(', ')].filter(Boolean).join(' – ')],['סגנון',S.style],['הבקשה',S.note],['פריטים',items.join(', ')],['ריצוף',nameOf(FLOORS,S.floor)],['חיפוי',S.clad&&S.clad!=='c-none'?nameOf(CLADS,S.clad):''],['צבע קירות',paint],['טפט',wpLabel()],['וילונות',[S.curt&&S.curt!=='none'?nameOf(CURTS,S.curt):(S.curt==='none'?'בלי וילון':''),fabLabel()].filter(Boolean).join(' – ')],['מסגרות',S.frames.map(f=>nameOf(FRAMES,f)).join(', ')],['תאורה',S.light.map(l=>nameOf(LIGHT,l)).join(', ')],['פריטים שלך',S.refs.length?S.refs.length+' תמונות':''],['מה כתבת',S.extra]].filter(r=>r[1]);
+  const rows=[['תוכניות',`${allPlans().length} תמונות`],['פרויקט',[typ,S.rooms.join(', ')].filter(Boolean).join(' – ')],['סגנון',S.style],['הבקשה',S.note],['פריטים',items.join(', ')],['ריצוף',nameOf(FLOORS,S.floor)],['חיפוי',S.clad&&S.clad!=='c-none'?nameOf(CLADS,S.clad):''],['צבע קירות',paint],['טפט',wpLabel()],['וילונות',[S.curt&&S.curt!=='none'?nameOf(CURTS,S.curt):(S.curt==='none'?'בלי וילון':''),fabLabel()].filter(Boolean).join(' – ')],['מסגרות',S.frames.map(f=>nameOf(FRAMES,f)).join(', ')],['תאורה',S.light.map(l=>nameOf(LIGHT,l)).join(', ')],['פריטים שלך',S.refs.map((r,i)=>`${i+1}. ${r.name||'פריט'}${r.note?' – '+r.note:''}`).join(' · ')],['מה כתבת',S.extra]].filter(r=>r[1]);
   const hasKey=!!LS.get('key');
   $('stepBody').innerHTML = `${hasKey?'':`<div class="note">בלחיצה על הכפתור נפתחת אפליקציית ChatGPT שלך עם התוכניות וכל ההוראות – בחינם, דרך המנוי.</div>`}
   <p class="lead">זה מה שנשלח ל-ChatGPT. אם צריך לשנות משהו – חזרה עם החץ למעלה.</p>
@@ -769,7 +791,7 @@ function buildPrompt(viewIdx, hand=false){
     S.frames.length?`Decorative wall details: ${S.frames.map(id=>(FRAMES.find(x=>x.id===id)||{}).en).join('; ')}.`:null,
     S.light.length?`Lighting: ${S.light.map(id=>(LIGHT.find(x=>x.id===id)||{}).en).join('; ')}.`:null,
     S.note?`The designer's request (in Hebrew – follow it): "${S.note}"`:null,
-    S.refs.length?(()=>{const r=Math.min(8,S.refs.length), p=Math.min(allPlans().length,16-r); return `Images 1–${p} are the plans. Images ${p+1}–${p+r} are reference photos supplied by the designer of specific furniture, materials or finishes – include these exact items and materials faithfully (same shape, colour and texture) in the rendering.`})():null,
+    S.refs.length?(()=>{const r=Math.min(8,S.refs.length), p=Math.min(allPlans().length,16-r); return `Images 1–${p} are the plans. Images ${p+1}–${p+r} are reference photos of specific items and materials supplied by the designer. Place each one in the space and follow its instructions:\n`+S.refs.slice(0,r).map((x,k)=>`– Image ${p+k+1}${x.name?` ("${x.name}", in Hebrew)`:''}: ${(REFMODES.find(m=>m[0]===x.mode)||REFMODES[0])[2]}${x.note?`. Designer's note (in Hebrew – follow precisely, e.g. keep what she says to keep and change only what she says to change): "${x.note}"`:'; keep its shape, colour and material.'}`).join('\n')})():null,
     S.extra?`The designer's personal instructions (in Hebrew – follow them carefully): "${S.extra}"`:null,
     hand ? `Please generate ${handN()} separate landscape images (3:2), one after another, each from a different camera position: ${VIEWS_EN.slice(0,handN()).map((v,i)=>`${i+1}) ${v}`).join('; ')}. 24mm lens, straight verticals, soft natural light, realistic materials and shadows, tasteful styling, no people, no text, no watermark. Do not ask questions – just create the images.`
          : `Camera: ${VIEWS_EN[viewIdx%VIEWS_EN.length]}, 24mm lens, straight verticals, soft natural light, realistic materials and shadows, tasteful styling, no people, no text, no watermark.`
@@ -785,7 +807,7 @@ async function genOne(i){
     fd.append('model',model); fd.append('prompt',buildPrompt(i)); fd.append('size','1536x1024'); fd.append('quality',LS.get('q','medium')); fd.append('n','1');
     const refs=S.refs.slice(0,8), plans=allPlans().slice(0,16-refs.length);
     plans.forEach((u,k)=>fd.append('image[]',dataToBlob(u),`plan-${k+1}.jpg`));
-    refs.forEach((u,k)=>fd.append('image[]',dataToBlob(u),`reference-${k+1}.jpg`));
+    refs.forEach((r,k)=>fd.append('image[]',dataToBlob(r.src),`reference-${k+1}.jpg`));
     try{ const j=await oa('images/edits',{method:'POST',body:fd}); const d=j.data&&j.data[0]; if(!d)throw new Error('לא התקבלה תמונה');
       return d.b64_json?'data:image/png;base64,'+d.b64_json:d.url;
     }catch(e){ lastErr=e; if(e.status===401||e.status===429||/safety|moderation/i.test(e.message))break; if(!/model|does not exist|not found|access/i.test(e.message))break; }
@@ -812,7 +834,7 @@ async function generate(){
 const handN = () => Math.min(4,+LS.get('n','2')||2);
 function handFiles(){
   const refs=S.refs.slice(0,8), plans=allPlans().slice(0,16-refs.length);
-  return [...plans.map((u,k)=>new File([dataToBlob(u)],`plan-${k+1}.jpg`,{type:'image/jpeg'})), ...refs.map((u,k)=>new File([dataToBlob(u)],`reference-${k+1}.jpg`,{type:'image/jpeg'}))];
+  return [...plans.map((u,k)=>new File([dataToBlob(u)],`plan-${k+1}.jpg`,{type:'image/jpeg'})), ...refs.map((r,k)=>new File([dataToBlob(r.src)],`reference-${k+1}.jpg`,{type:'image/jpeg'}))];
 }
 function copyText(t){ try{ navigator.clipboard.writeText(t).then(()=>toast('הטקסט הועתק'),()=>{}); }catch(_){} }
 function sendToApp(){
