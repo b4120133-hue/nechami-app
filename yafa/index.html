@@ -549,7 +549,7 @@ const STEPS = [
   {t:'ריצוף וקירות', render:rWalls, ok:()=>true, next:'המשך לתאורה'},
   {t:'תאורה וחשמל', render:rLight, ok:()=>true, next:'המשך לפריטים וחומרים שלך'},
   {t:'חומרים ופריטים שלך', render:rRefs, ok:()=>true, next:'המשך לסיכום'},
-  {t:'סיכום', render:rSum, ok:()=>true, next:()=>KEY()?'צרו לי הדמיות':'שליחה ל-ChatGPT'}
+  {t:'סיכום', render:rSum, ok:()=>!!(S._pack&&S._pack.key===packKey()), next:()=>KEY()?'צרו לי הדמיות':'שליחה ל-ChatGPT'}
 ];
 function go(n){
   step=n; show('wiz');
@@ -571,7 +571,7 @@ function rPlans(){
     const k=e.target.dataset.slot; const files=[...e.target.files]; if(!files.length)return;
     toast('טוען...');
     S.plans[k].push(...await readFiles(files));
-    if(allPlans().length>16) toast('שימי לב: ל-ChatGPT נשלחות עד 16 תוכניות');
+    if(allPlans().length>9) toast('שימי לב: ל-ChatGPT נשלחות עד 9 תוכניות');
     rPlans(); refreshNext();
   }));
   $('stepBody').querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click',()=>{const [k,i]=b.dataset.del.split(':'); S.plans[k].splice(+i,1); rPlans(); refreshNext();}));
@@ -726,7 +726,7 @@ function rRefs(){
   <div class="sec"><h3>כתבי לי כל מה שתרצי</h3><p>על כל ההדמיה: מה לשים איפה, צמחים, אומנות על הקירות, אווירה, מה לא לעשות – הכול.</p>
     <textarea id="extra" style="min-height:180px" placeholder="כתבי כאן...">${esc(S.extra)}</textarea></div>`;
   const B=$('stepBody');
-  $('refIn').addEventListener('change',async e=>{ const files=[...e.target.files]; if(!files.length)return; toast('טוען...'); const imgs=await readFiles(files); S.refs.push(...imgs.map(src=>({src,name:'',mode:'exact',note:''}))); if(S.refs.length>8) toast('ל-ChatGPT נשלחים עד 8 פריטים'); rRefs(); const last=B.querySelector(`[data-rname="${S.refs.length-imgs.length}"]`); if(last) last.focus(); });
+  $('refIn').addEventListener('change',async e=>{ const files=[...e.target.files]; if(!files.length)return; toast('טוען...'); const imgs=await readFiles(files); S.refs.push(...imgs.map(src=>({src,name:'',mode:'exact',note:''}))); rRefs(); const last=B.querySelector(`[data-rname="${S.refs.length-imgs.length}"]`); if(last) last.focus(); });
   B.querySelectorAll('[data-rdel]').forEach(b=>b.addEventListener('click',()=>{ S.refs.splice(+b.dataset.rdel,1); rRefs(); }));
   B.querySelectorAll('[data-rname]').forEach(el=>el.addEventListener('input',()=>S.refs[+el.dataset.rname].name=el.value));
   B.querySelectorAll('[data-rnote]').forEach(el=>el.addEventListener('input',()=>{ const r=S.refs[+el.dataset.rnote]; r.note=el.value; if(el.value.trim() && r.mode==='exact'){ r.mode='change'; B.querySelectorAll(`[data-rmode^="${el.dataset.rnote}:"]`).forEach(c=>c.setAttribute('aria-pressed',c.dataset.rmode.endsWith(':change'))); } }));
@@ -737,6 +737,7 @@ function rRefs(){
 /* ---- step 6: summary ---- */
 const nameOf=(arr,id)=>(arr.find(x=>x.id===id)||{}).t||'';
 function rSum(){
+  ensurePack().catch(()=>{}).then(()=>{ if(step===6) refreshNext(); });
   const typ=nameOf(TYPES,S.type);
   const items=Object.keys(S.items).filter(k=>S.items[k]).map(k=>ITEM_BY[k].t);
   const paint=(PAINT.find(p=>p[0]===S.paint)||[])[1];
@@ -747,6 +748,41 @@ function rSum(){
   <div class="sum">${rows.map(([a,b])=>`<div><b>${a}</b><span>${esc(b)}</span></div>`).join('')}</div>`;
   const g=$('goSet'); if(g) g.addEventListener('click',openSet);
 }
+
+/* ================= IMAGE PACK: plans + items, any number of items ================= */
+const MAXIMG = 10; // images per message; above this, items are laid out 4 per numbered board
+const packKey = () => JSON.stringify([allPlans().map(u=>u.length), S.refs.map(r=>[r.src.length,r.name])]);
+function simplePack(){
+  const plans=allPlans(), refs=S.refs.slice(0,MAXIMG-1), pl=plans.slice(0,Math.max(1,MAXIMG-refs.length));
+  const imgs=[...pl.map((src,k)=>({src,name:`plan-${k+1}.jpg`})), ...refs.map((r,k)=>({src:r.src,name:`item-${k+1}.jpg`}))];
+  const map=refs.map((r,k)=>`Image ${pl.length+k+1} shows item ${k+1}.`);
+  return {key:packKey(), imgs, planCount:pl.length, map};
+}
+async function board(refs, start){
+  const N=1600, C=800, c=document.createElement('canvas'); c.width=N; c.height=N;
+  const x=c.getContext('2d'); x.fillStyle='#fff'; x.fillRect(0,0,N,N); x.direction='rtl';
+  for(let j=0;j<refs.length;j++){
+    const cx=(1-j%2)*C, cy=Math.floor(j/2)*C;
+    try{ const im=await loadImg(refs[j].src); const bw=C-60, bh=C-150; const k=Math.min(bw/im.naturalWidth,bh/im.naturalHeight);
+      const w=im.naturalWidth*k, h=im.naturalHeight*k; x.drawImage(im,cx+(C-w)/2,cy+30+(bh-h)/2,w,h); }catch(_){}
+    x.fillStyle='#8A5A3C'; x.beginPath(); x.arc(cx+C-70,cy+C-62,40,0,Math.PI*2); x.fill();
+    x.fillStyle='#fff'; x.font='700 44px Assistant, sans-serif'; x.textAlign='center'; x.textBaseline='middle'; x.fillText(String(start+j+1),cx+C-70,cy+C-60);
+    x.fillStyle='#3B2F27'; x.font='400 38px Assistant, sans-serif'; x.textAlign='right'; x.fillText((refs[j].name||'').slice(0,30),cx+C-130,cy+C-60);
+    x.strokeStyle='#DED2C2'; x.lineWidth=4; x.strokeRect(cx+2,cy+2,C-4,C-4);
+  }
+  return c.toDataURL('image/jpeg',.9);
+}
+async function ensurePack(){
+  if(S._pack && S._pack.key===packKey()) return S._pack;
+  const plans=allPlans(), refs=S.refs;
+  if(plans.length+refs.length<=MAXIMG){ S._pack=simplePack(); return S._pack; }
+  const boards=[]; for(let i=0;i<refs.length;i+=4) boards.push({src:await board(refs.slice(i,i+4),i), nums:refs.slice(i,i+4).map((_,j)=>i+j+1)});
+  const bs=boards.slice(0,MAXIMG-1), pl=plans.slice(0,Math.max(1,MAXIMG-bs.length));
+  const imgs=[...pl.map((src,k)=>({src,name:`plan-${k+1}.jpg`})), ...bs.map((b,k)=>({src:b.src,name:`items-board-${k+1}.jpg`}))];
+  const map=bs.map((b,k)=>`Image ${pl.length+k+1} is a reference board showing items ${b.nums.join(', ')} – each item is marked with its number in a brown circle.`);
+  S._pack={key:packKey(), imgs, planCount:pl.length, map}; return S._pack;
+}
+const curPack = () => (S._pack && S._pack.key===packKey()) ? S._pack : simplePack();
 
 /* ================= OPENAI ================= */
 const KEY = () => LS.get('key').trim();
@@ -791,7 +827,7 @@ function buildPrompt(viewIdx, hand=false){
     S.frames.length?`Decorative wall details: ${S.frames.map(id=>(FRAMES.find(x=>x.id===id)||{}).en).join('; ')}.`:null,
     S.light.length?`Lighting: ${S.light.map(id=>(LIGHT.find(x=>x.id===id)||{}).en).join('; ')}.`:null,
     S.note?`The designer's request (in Hebrew – follow it): "${S.note}"`:null,
-    S.refs.length?(()=>{const r=Math.min(8,S.refs.length), p=Math.min(allPlans().length,16-r); return `Images 1–${p} are the plans. Images ${p+1}–${p+r} are reference photos of specific items and materials supplied by the designer. Place each one in the space and follow its instructions:\n`+S.refs.slice(0,r).map((x,k)=>`– Image ${p+k+1}${x.name?` ("${x.name}", in Hebrew)`:''}: ${(REFMODES.find(m=>m[0]===x.mode)||REFMODES[0])[2]}${x.note?`. Designer's note (in Hebrew – follow precisely, e.g. keep what she says to keep and change only what she says to change): "${x.note}"`:'; keep its shape, colour and material.'}`).join('\n')})():null,
+    S.refs.length?(()=>{const pk=curPack(); return `Images 1–${pk.planCount} are the plans.\n${pk.map.join('\n')}\nThe designer's own items – place each one in the space and follow its instructions:\n`+S.refs.map((x,k)=>`– Item ${k+1}${x.name?` ("${x.name}", in Hebrew)`:''}: ${(REFMODES.find(m=>m[0]===x.mode)||REFMODES[0])[2]}${x.note?`. Designer's note (in Hebrew – follow precisely: keep what she says to keep and change only what she says to change): "${x.note}"`:'; keep its shape, colour and material.'}`).join('\n')})():null,
     S.extra?`The designer's personal instructions (in Hebrew – follow them carefully): "${S.extra}"`:null,
     hand ? `Please generate ${handN()} separate landscape images (3:2), one after another, each from a different camera position: ${VIEWS_EN.slice(0,handN()).map((v,i)=>`${i+1}) ${v}`).join('; ')}. 24mm lens, straight verticals, soft natural light, realistic materials and shadows, tasteful styling, no people, no text, no watermark. Do not ask questions – just create the images.`
          : `Camera: ${VIEWS_EN[viewIdx%VIEWS_EN.length]}, 24mm lens, straight verticals, soft natural light, realistic materials and shadows, tasteful styling, no people, no text, no watermark.`
@@ -805,9 +841,7 @@ async function genOne(i){
   for(const model of models){
     const fd=new FormData();
     fd.append('model',model); fd.append('prompt',buildPrompt(i)); fd.append('size','1536x1024'); fd.append('quality',LS.get('q','medium')); fd.append('n','1');
-    const refs=S.refs.slice(0,8), plans=allPlans().slice(0,16-refs.length);
-    plans.forEach((u,k)=>fd.append('image[]',dataToBlob(u),`plan-${k+1}.jpg`));
-    refs.forEach((r,k)=>fd.append('image[]',dataToBlob(r.src),`reference-${k+1}.jpg`));
+    curPack().imgs.forEach(f=>fd.append('image[]',dataToBlob(f.src),f.name));
     try{ const j=await oa('images/edits',{method:'POST',body:fd}); const d=j.data&&j.data[0]; if(!d)throw new Error('לא התקבלה תמונה');
       return d.b64_json?'data:image/png;base64,'+d.b64_json:d.url;
     }catch(e){ lastErr=e; if(e.status===401||e.status===429||/safety|moderation/i.test(e.message))break; if(!/model|does not exist|not found|access/i.test(e.message))break; }
@@ -816,7 +850,7 @@ async function genOne(i){
 }
 async function generate(){
   if(!KEY()){ handoff(); return; }
-  show('prog'); $('progErr').innerHTML=''; $('progTitle').textContent='ההדמיות בהכנה';
+  show('prog'); $('progErr').innerHTML=''; try{ await ensurePack(); }catch(_){} $('progTitle').textContent='ההדמיות בהכנה';
   const n=+LS.get('n','2'); const out=[]; let errs=[];
   $('progText').textContent=`ChatGPT מעצב ${n>1?n+' הדמיות':'הדמיה'} לפי הבחירות שלך. זה לוקח בדרך כלל דקה עד שלוש – אפשר להשאיר את המסך פתוח.`;
   await Promise.all(Array.from({length:n},(_,i)=>genOne(i).then(u=>out[i]=u).catch(e=>errs.push(e))));
@@ -833,8 +867,7 @@ async function generate(){
 /* ================= HANDOFF (free, via the ChatGPT app) ================= */
 const handN = () => Math.min(4,+LS.get('n','2')||2);
 function handFiles(){
-  const refs=S.refs.slice(0,8), plans=allPlans().slice(0,16-refs.length);
-  return [...plans.map((u,k)=>new File([dataToBlob(u)],`plan-${k+1}.jpg`,{type:'image/jpeg'})), ...refs.map((r,k)=>new File([dataToBlob(r.src)],`reference-${k+1}.jpg`,{type:'image/jpeg'}))];
+  return curPack().imgs.map(f=>new File([dataToBlob(f.src)],f.name,{type:'image/jpeg'}));
 }
 function copyText(t){ try{ navigator.clipboard.writeText(t).then(()=>toast('הטקסט הועתק'),()=>{}); }catch(_){} }
 function sendToApp(){
