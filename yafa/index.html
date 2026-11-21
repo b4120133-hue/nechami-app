@@ -202,25 +202,59 @@ textarea:focus,.inp:focus{outline:2px solid var(--gold);outline-offset:1px}
   </div>
 </section>
 
-<!-- ================= HANDOFF TO CHATGPT APP ================= -->
-<section class="view" id="hand">
+<!-- ================= STAGE 1: DRAFT WITH CLAUDE ================= -->
+<section class="view" id="cl">
   <header class="top">
-    <button class="iconbtn" type="button" id="handBack" aria-label="חזרה לבחירות">
+    <button class="iconbtn" type="button" id="clBack" aria-label="חזרה לסיכום">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
     </button>
-    <h2>שולחים ל-ChatGPT</h2>
+    <h2>שלב 1: טיוטה עם Claude</h2>
   </header>
   <div class="body" style="max-width:720px">
     <ol class="howto">
-      <li><b>בחלון שנפתח בחרי ChatGPT.</b><span>התוכניות והפריטים יעברו לשם לבד.</span></li>
-      <li><b>הטקסט כבר מוכן.</b><span>אם הוא לא הופיע בתיבת הכתיבה – לחיצה ארוכה בתיבה ← "הדבק".</span></li>
-      <li><b>לוחצים שליחה ב-ChatGPT.</b><span>אחרי דקה-שתיים ההדמיות מוכנות שם.</span></li>
-      <li><b>שולחים ללקוח או לאחות.</b><span>אפשר ישר מ-ChatGPT, או לשמור לגלריה ולהעלות לכאן – ואז הן נשמרות גם ב"הדמיות האחרונות".</span></li>
+      <li><b>בחלון שנפתח בחרי Claude ולחצי שליחה.</b><span>התוכניות, הפריטים וכל הבחירות עוברים לשם. אם הטקסט לא הופיע – לחיצה ארוכה בתיבה ← "הדבק".</span></li>
+      <li><b>Claude מכין טיוטה ראשונה.</b><span>סקיצה של החלל ותיאור מסודר של מה יהיה בכל מקום.</span></li>
+      <li><b>כותבים לו מה לשנות – כמה פעמים שרוצים.</b><span>"הספה בירוק זית", "בלי טפט בסלון", "להזיז את השולחן לחלון"...</span></li>
+      <li><b>כשהכול מתאים – כותבים לו "מאושר".</b><span>הוא יכתוב את הטקסט הסופי באנגלית ל-ChatGPT.</span></li>
+      <li><b>לוחצים "העתק" על הטקסט שלו וחוזרים לכאן.</b></li>
     </ol>
     <div style="display:flex;flex-direction:column;gap:12px;margin-top:22px">
-      <button class="big" type="button" id="handAgain">פתיחת ChatGPT שוב</button>
-      <button class="ghost" type="button" id="handCopy" style="min-height:52px">העתקת הטקסט שוב</button>
+      <button class="big" type="button" id="toStage2">שלב 2: העברה ל-ChatGPT</button>
+      <button class="ghost" type="button" id="clAgain" style="min-height:52px">פתיחת Claude שוב</button>
+      <button class="ghost" type="button" id="clCopy" style="min-height:52px">העתקת הטקסט ל-Claude שוב</button>
+    </div>
+    <details style="margin-top:24px"><summary class="muted" style="cursor:pointer;min-height:44px">הטקסט שנשלח ל-Claude</summary><pre id="clText" style="white-space:pre-wrap;font:14px/1.5 system-ui,sans-serif;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;color:var(--soft)"></pre></details>
+  </div>
+</section>
+
+<!-- ================= STAGE 2: CHATGPT ================= -->
+<section class="view" id="hand">
+  <header class="top">
+    <button class="iconbtn" type="button" id="handBack" aria-label="חזרה">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+    </button>
+    <h2>שלב 2: ההדמיות ב-ChatGPT</h2>
+  </header>
+  <div class="body" style="max-width:720px">
+    <div class="sec" id="pasteSec">
+      <h3>הטקסט המאושר מ-Claude</h3>
+      <p>לחצי "הדבקה" – הטקסט שהעתקת מ-Claude ייכנס לכאן.</p>
+      <label for="handPaste" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">הטקסט מ-Claude</label>
+      <textarea id="handPaste" dir="ltr" style="min-height:150px;font-size:15px" placeholder="Paste the text from Claude here..."></textarea>
+      <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap">
+        <button class="ghost" type="button" id="doPaste" style="min-height:50px">הדבקה</button>
+        <button class="ghost" type="button" id="clearPaste" style="min-height:50px">ניקוי</button>
+      </div>
+    </div>
+    <button class="big" type="button" id="handAgain" style="max-width:none">שליחה ל-ChatGPT</button>
+    <ol class="howto" style="margin-top:22px">
+      <li><b>בחלון שנפתח בחרי ChatGPT ולחצי שליחה.</b><span>התוכניות והפריטים עוברים לבד. אם הטקסט לא הופיע – לחיצה ארוכה בתיבה ← "הדבק".</span></li>
+      <li><b>אחרי דקה-שתיים ההדמיות מוכנות ב-ChatGPT.</b></li>
+      <li><b>שומרים לגלריה ומעלים לכאן</b><span>– ואז הן מקבלות את הלוגו ונשמרות ב"הדמיות האחרונות".</span></li>
+    </ol>
+    <div style="display:flex;flex-direction:column;gap:12px;margin-top:18px">
       <label class="add" style="min-height:68px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 19V5M7 10l5-5 5 5"/></svg>ההדמיות מוכנות? העלי אותן לכאן<input type="file" accept="image/*,application/pdf,.pdf" multiple id="handIn" aria-label="העלאת ההדמיות מ-ChatGPT"></label>
+      <button class="ghost" type="button" id="handCopy" style="min-height:52px">העתקת הטקסט שוב</button>
     </div>
     <details style="margin-top:24px"><summary class="muted" style="cursor:pointer;min-height:44px">הטקסט שנשלח ל-ChatGPT</summary><pre id="handText" dir="ltr" style="white-space:pre-wrap;font:14px/1.5 system-ui,sans-serif;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;color:var(--soft)"></pre></details>
   </div>
@@ -549,7 +583,7 @@ const STEPS = [
   {t:'ריצוף וקירות', render:rWalls, ok:()=>true, next:'המשך לתאורה'},
   {t:'תאורה וחשמל', render:rLight, ok:()=>true, next:'המשך לפריטים וחומרים שלך'},
   {t:'חומרים ופריטים שלך', render:rRefs, ok:()=>true, next:'המשך לסיכום'},
-  {t:'סיכום', render:rSum, ok:()=>!!(S._pack&&S._pack.key===packKey()), next:()=>KEY()?'צרו לי הדמיות':'שליחה ל-ChatGPT'}
+  {t:'סיכום', render:rSum, ok:()=>!!(S._pack&&S._pack.key===packKey()), next:'שלב 1: טיוטה עם Claude'}
 ];
 function go(n){
   step=n; show('wiz');
@@ -743,10 +777,12 @@ function rSum(){
   const paint=(PAINT.find(p=>p[0]===S.paint)||[])[1];
   const rows=[['תוכניות',`${allPlans().length} תמונות`],['פרויקט',[typ,S.rooms.join(', ')].filter(Boolean).join(' – ')],['סגנון',S.style],['הבקשה',S.note],['פריטים',items.join(', ')],['ריצוף',nameOf(FLOORS,S.floor)],['חיפוי',S.clad&&S.clad!=='c-none'?nameOf(CLADS,S.clad):''],['צבע קירות',paint],['טפט',wpLabel()],['וילונות',[S.curt&&S.curt!=='none'?nameOf(CURTS,S.curt):(S.curt==='none'?'בלי וילון':''),fabLabel()].filter(Boolean).join(' – ')],['מסגרות',S.frames.map(f=>nameOf(FRAMES,f)).join(', ')],['תאורה',S.light.map(l=>nameOf(LIGHT,l)).join(', ')],['פריטים שלך',S.refs.map((r,i)=>`${i+1}. ${r.name||'פריט'}${r.note?' – '+r.note:''}`).join(' · ')],['מה כתבת',S.extra]].filter(r=>r[1]);
   const hasKey=!!LS.get('key');
-  $('stepBody').innerHTML = `${hasKey?'':`<div class="note">בלחיצה על הכפתור נפתחת אפליקציית ChatGPT שלך עם התוכניות וכל ההוראות – בחינם, דרך המנוי.</div>`}
+  $('stepBody').innerHTML = `<div class="note">קודם טיוטה עם Claude – מתקנים איתו עד שזה בדיוק מה שרצית. אחרי האישור עוברים ל-ChatGPT להדמיות האמיתיות.</div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px"><button type="button" class="ghost" id="skipToGpt">לדלג ישר ל-ChatGPT</button>${hasKey?'<button type="button" class="ghost" id="apiGen">יצירה בתוך האפליקציה (בתשלום)</button>':''}</div>
   <p class="lead">זה מה שנשלח ל-ChatGPT. אם צריך לשנות משהו – חזרה עם החץ למעלה.</p>
   <div class="sum">${rows.map(([a,b])=>`<div><b>${a}</b><span>${esc(b)}</span></div>`).join('')}</div>`;
-  const g=$('goSet'); if(g) g.addEventListener('click',openSet);
+  $('skipToGpt').addEventListener('click',()=>{ if(!stepOk()) return; S._fromClaude=false; $('handPaste').value=''; handoff(); });
+  const ag=$('apiGen'); if(ag) ag.addEventListener('click',()=>{ if(stepOk()) generate(); });
 }
 
 /* ================= IMAGE PACK: plans + items, any number of items ================= */
@@ -871,16 +907,56 @@ function handFiles(){
 }
 function copyText(t){ try{ navigator.clipboard.writeText(t).then(()=>toast('הטקסט הועתק'),()=>{}); }catch(_){} }
 function sendToApp(){
-  const text=buildPrompt(0,true); const files=handFiles();
+  const pasted=cleanClaude($('handPaste').value||''); const text=pasted||buildPrompt(0,true); const files=handFiles();
   copyText(text);
   if(navigator.canShare && navigator.canShare({files})){ navigator.share({files,text}).catch(()=>{}); }
   else { toast('הטקסט הועתק – צרפי את התוכניות ב-ChatGPT'); window.open('https://chatgpt.com/','_blank'); }
   $('handText').textContent=text;
 }
 function handoff(){ sendToApp(); show('hand'); }
+const stepOk = () => STEPS[step].ok();
+function hebSummary(){
+  return [...document.querySelectorAll('.sum div')].map(d=>`${d.querySelector('b').textContent}: ${d.querySelector('span').textContent}`).join('\n');
+}
+function claudePrompt(){
+  const n=handN();
+  return `שלום Claude, אני יפה ברוינר, מעצבת פנים. אני צריכה את עזרתך בהכנת הדמיה.
+מצורפות תוכניות${S.refs.length?' ותמונות של פריטים שלי':''} (הסדר והמספור מוסברים למטה).
+
+מה אני מבקשת:
+1. הכן טיוטה ראשונה של העיצוב: צייר סקיצה ברורה של החלל (מבט פרספקטיבה או תוכנית צבועה עם חומרים) וכתוב תיאור קצר ומסודר של מה יהיה בכל אזור – ריצוף, קירות, וילונות, רהיטים, תאורה. תעבוד לפי התוכניות המצורפות בדיוק.
+2. דבר איתי רק בעברית. אחרי כל טיוטה שאל אותי מה לשנות, ועדכן את הטיוטה לפי ההערות שלי – כמה פעמים שצריך.
+3. כשאכתוב "מאושר" – כתוב פרומפט סופי באנגלית ל-ChatGPT ליצירת ${n} הדמיות פוטוריאליסטיות, בתוך בלוק קוד אחד בלבד, בלי שום טקסט אחר בתוכו. הפרומפט צריך לכלול את כל מה שאישרנו, ולהתחיל במשפט שמסביר את התמונות המצורפות בדיוק לפי הסדר למטה (אצרף ל-ChatGPT את אותן תמונות באותו סדר). בסוף הפרומפט: מצלמה בגובה העיניים, עדשה 24 מ"מ, אור טבעי רך, בלי אנשים, בלי טקסט ובלי סימני מים, ${n} תמונות נפרדות מזוויות שונות, ובלי לשאול שאלות.
+
+הבחירות שלי:
+${hebSummary()}
+
+המפרט המלא (באנגלית, כבסיס לפרומפט הסופי):
+${buildPrompt(0,true).split('\n').slice(2).join('\n')}`;
+}
+function sendToClaude(){
+  const text=claudePrompt(); const files=handFiles();
+  copyText(text);
+  if(navigator.canShare && navigator.canShare({files})){ toast('בחרי Claude'); navigator.share({files,text}).catch(()=>{}); }
+  else { toast('הטקסט הועתק – צרפי את התוכניות ב-Claude'); window.open('https://claude.ai/new','_blank'); }
+  $('clText').textContent=text;
+}
+function toClaude(){ S._fromClaude=true; sendToClaude(); show('cl'); }
+$('clAgain').addEventListener('click',sendToClaude);
+$('clCopy').addEventListener('click',()=>copyText(claudePrompt()));
+$('clBack').addEventListener('click',()=>go(6));
+$('toStage2').addEventListener('click',async()=>{ show('hand'); await doPaste(true); });
+async function doPaste(quiet){
+  try{ const t=(await navigator.clipboard.readText()||'').trim(); if(t && !/^שלום Claude/.test(t)){ $('handPaste').value=cleanClaude(t); if(!quiet) toast('הודבק'); return; } }catch(_){}
+  if(!quiet) toast('לא הצלחתי להדביק לבד – לחיצה ארוכה בתיבה ← "הדבק"');
+}
+const cleanClaude = t => { const m=t.match(/```[a-z]*\n?([\s\S]*?)```/i); return (m?m[1]:t).trim(); };
+$('doPaste').addEventListener('click',()=>doPaste(false));
+$('clearPaste').addEventListener('click',()=>{ $('handPaste').value=''; });
+$('handPaste').addEventListener('blur',e=>{ e.target.value=cleanClaude(e.target.value); });
 $('handAgain').addEventListener('click',sendToApp);
-$('handCopy').addEventListener('click',()=>copyText(buildPrompt(0,true)));
-$('handBack').addEventListener('click',()=>go(6));
+$('handCopy').addEventListener('click',()=>copyText(cleanClaude($('handPaste').value||'')||buildPrompt(0,true)));
+$('handBack').addEventListener('click',()=>{ if(S._fromClaude) show('cl'); else go(6); });
 $('handIn').addEventListener('change',async e=>{
   const files=[...e.target.files]; if(!files.length)return; toast('טוען...');
   toast('מוסיף את הלוגו...'); const imgs=await Promise.all((await readFiles(files)).map(stamp)); if(!imgs.length)return;
@@ -953,7 +1029,7 @@ $('nextBtn').addEventListener('click',async()=>{
     await detect(); detecting=false; if(step===2) rItems();
     return;
   }
-  if(step===6){ if(KEY()) generate(); else handoff(); return; }
+  if(step===6){ toClaude(); return; }
   go(step+1);
 });
 $('homeBtn').addEventListener('click',()=>{ show('home'); renderRecent(); });
