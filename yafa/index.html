@@ -425,6 +425,28 @@ async function shrink(file, max=1800){
     return c.toDataURL('image/jpeg',.88);
   } finally { URL.revokeObjectURL(url); }
 }
+let pdfLib=null;
+function loadPdfLib(){
+  if(pdfLib) return pdfLib;
+  pdfLib = new Promise((ok,no)=>{ const sc=document.createElement('script'); sc.src='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+    sc.onload=()=>{ window.pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'; ok(window.pdfjsLib); };
+    sc.onerror=()=>{ pdfLib=null; no(new Error('pdf')); }; document.head.appendChild(sc); });
+  return pdfLib;
+}
+async function pdfToImages(file, max=2000, maxPages=12){
+  const lib=await loadPdfLib();
+  const doc=await lib.getDocument({data:await file.arrayBuffer()}).promise;
+  const out=[];
+  for(let p=1;p<=Math.min(doc.numPages,maxPages);p++){
+    const page=await doc.getPage(p); const v1=page.getViewport({scale:1});
+    const scale=Math.min(4,max/Math.max(v1.width,v1.height)); const vp=page.getViewport({scale});
+    const c=document.createElement('canvas'); c.width=Math.round(vp.width); c.height=Math.round(vp.height);
+    const x=c.getContext('2d'); x.fillStyle='#fff'; x.fillRect(0,0,c.width,c.height);
+    await page.render({canvasContext:x,viewport:vp}).promise;
+    out.push(c.toDataURL('image/jpeg',.88));
+  }
+  return out;
+}
 const dataToBlob = (d) => { const [h,b]=d.split(','); const mime=h.match(/:(.*?);/)[1]; const bin=atob(b); const u=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i); return new Blob([u],{type:mime}); };
 const allPlans = () => [...S.plans.top,...S.plans.walls,...S.plans.other];
 
@@ -451,12 +473,19 @@ function rPlans(){
   $('stepBody').innerHTML = `<p class="lead">מעלים מהגלריה כמה תוכניות שרוצים. כל סוג תוכנית במקום שלו – ככה ChatGPT מבין בדיוק מה זה.</p>
   <div class="slots">${SLOTS.map(([k,t,d,ic])=>`<div class="slot"><h3><svg class="ic" viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#7A5634" stroke-width="1.4" stroke-linejoin="round" aria-hidden="true">${ic}</svg>${t}</h3><p>${d}</p>
     <div class="thumbs">${S.plans[k].map((src,i)=>`<div class="thumb"><img src="${src}" alt="${t} ${i+1}"><button type="button" data-del="${k}:${i}" aria-label="מחיקה"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>`).join('')}</div>
-    <label class="add"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>${S.plans[k].length?'עוד תמונה':'העלאה מהגלריה'}<input type="file" accept="image/*" multiple data-slot="${k}" aria-label="העלאת ${t}"></label></div>`).join('')}</div>
-  <p class="muted" style="margin-top:18px">יש תוכנית ב-PDF? צלמי מסך של התוכנית והעלי את התמונה.</p>`;
+    <label class="add"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>${S.plans[k].length?'עוד תמונה':'העלאה מהגלריה'}<input type="file" accept="image/*,application/pdf,.pdf" multiple data-slot="${k}" aria-label="העלאת ${t}"></label></div>`).join('')}</div>
+  <p class="muted" style="margin-top:18px">אפשר להעלות תמונות מהגלריה או קבצי PDF – כל עמוד ב-PDF נכנס כתוכנית נפרדת.</p>`;
   $('stepBody').querySelectorAll('input[type=file]').forEach(inp=>inp.addEventListener('change',async e=>{
     const k=e.target.dataset.slot; const files=[...e.target.files]; if(!files.length)return;
     toast('טוען...');
-    for(const f of files){ try{ S.plans[k].push(await shrink(f)); }catch(_){ toast('לא הצלחתי לפתוח את אחת התמונות'); } }
+    for(const f of files){
+      const isPdf = f.type==='application/pdf' || /\.pdf$/i.test(f.name);
+      try{
+        if(isPdf){ toast('פותח את ה-PDF...'); const pages=await pdfToImages(f); S.plans[k].push(...pages); if(pages.length>1) toast(`נוספו ${pages.length} עמודים מה-PDF`); }
+        else S.plans[k].push(await shrink(f));
+      }catch(_){ toast(isPdf?'לא הצלחתי לפתוח את קובץ ה-PDF':'לא הצלחתי לפתוח את אחת התמונות'); }
+    }
+    if(allPlans().length>16) toast('שימי לב: ל-ChatGPT נשלחות עד 16 תוכניות');
     rPlans(); refreshNext();
   }));
   $('stepBody').querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click',()=>{const [k,i]=b.dataset.del.split(':'); S.plans[k].splice(+i,1); rPlans(); refreshNext();}));
