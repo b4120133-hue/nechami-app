@@ -2,127 +2,691 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>הדמיות של יפה ברוינר</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="הדמיות">
 <meta name="theme-color" content="#F1EAE1">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300;400;500&family=Assistant:wght@300;400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300;400;500&family=Assistant:wght@300;400;600;700&display=swap">
 <style>
-/* VOICE: quiet, warm, elegant – an interior studio's front door
-   IDEA: the studio's lookbook cover – a finished room beside the sign-in card
-   PICTURE: the ChatGPT living-room render, full height
-   COLOUR and TYPE: linen ground, walnut ink, terracotta-brown button; Frank Ruhl Libre + Assistant
-   LAYOUT: photo | panel on a landscape tablet, photo on top when upright or on a phone */
-:root{color-scheme:light;--bg:#F1EAE1;--panel:#F6F1EA;--ink:#3B2F27;--soft:#6E6155;--line:#D9CCBB;--field:#FBF8F3;--btn:#8A5A3C;--btn-h:#744A30;--gold:#B8946A}
+:root{--bg:#F1EAE1;--panel:#F7F2EB;--card:#FCFAF6;--ink:#3B2F27;--soft:#6E6155;--line:#DED2C2;--btn:#8A5A3C;--btn-h:#744A30;--gold:#B8946A;--sel:#8A5A3C;--selbg:#F3E6DA}
 *{box-sizing:border-box;min-width:0}
-html,body{height:100%}
-body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 'Assistant',system-ui,sans-serif;overflow-x:clip;-webkit-tap-highlight-color:transparent}
-.app{min-height:100dvh;display:grid;grid-template-columns:minmax(380px,42%) minmax(0,1fr)}
-.photo{position:relative;overflow:hidden;background:#C9B49A;order:2}
-.photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:40% 50%;animation:settle 1.6s ease-out both}
-@keyframes settle{from{transform:scale(1.05);opacity:.4}to{transform:none;opacity:1}}
-@media (prefers-reduced-motion:reduce){.photo img{animation:none}}
-.panel{background:var(--panel);display:flex;flex-direction:column;align-items:center;justify-content:space-between;gap:32px;padding:clamp(32px,6vh,64px) clamp(28px,5vw,64px) clamp(24px,4vh,40px);order:1}
-.top{width:100%;max-width:420px;display:flex;flex-direction:column;align-items:center;gap:clamp(18px,3vh,28px)}
-.logo{width:clamp(130px,16vw,190px);height:auto;display:block}
-h1{margin:0;font-family:'Frank Ruhl Libre',serif;font-weight:400;font-size:clamp(30px,3.4vw,40px);line-height:1.1;text-align:center;text-wrap:balance}
-.rule{width:96px;height:1px;background:var(--gold);margin-top:-4px}
-form{width:100%;display:flex;flex-direction:column;gap:14px;margin-top:8px}
-.field{display:flex;align-items:center;gap:12px;height:58px;padding:0 18px;border:1px solid var(--line);border-radius:10px;background:var(--field);transition:border-color .2s}
-.field:focus-within{border-color:var(--ink)}
-.field svg{flex:none}
-.field input{flex:1;height:100%;border:0;background:transparent;font:inherit;font-size:17px;color:var(--ink);outline:none}
-.field input::placeholder{color:#9A8F83}
-.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-.btn{height:60px;border:0;border-radius:10px;background:var(--btn);color:#fff;font:600 19px 'Assistant',sans-serif;letter-spacing:.03em;cursor:pointer;margin-top:10px;transition:background .2s}
-.btn:hover{background:var(--btn-h)}
-.btn:focus-visible,.card:focus-visible,.link:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
-.msg{min-height:22px;margin:0;font-size:15px;color:#8A3B2A;text-align:center}
-.steps{display:flex;align-items:flex-start;justify-content:center;gap:clamp(8px,2vw,18px);width:100%;max-width:440px;color:var(--soft)}
-.step{display:flex;flex-direction:column;align-items:center;gap:8px;width:104px;text-align:center;font-size:14px;line-height:1.3}
-.chev{margin-top:12px;flex:none}
-/* welcome view */
-.home{display:none;width:100%;max-width:440px;flex-direction:column;align-items:center;gap:22px}
-.app.in .top{display:none}.app.in .home{display:flex}.app.in .steps{display:none}
-.home h2{margin:0;font-family:'Frank Ruhl Libre',serif;font-weight:400;font-size:clamp(30px,3.4vw,40px)}
-.home p{margin:0;color:var(--soft);text-align:center}
-.cards{width:100%;display:flex;flex-direction:column;gap:12px}
-.card{display:flex;align-items:center;gap:16px;width:100%;min-height:76px;padding:14px 18px;border:1px solid var(--line);border-radius:12px;background:var(--field);font:inherit;color:var(--ink);text-align:right;cursor:pointer}
-.card b{display:block;font-weight:600;font-size:18px}
-.card span{font-size:14px;color:var(--soft)}
-.card .ic{width:48px;height:48px;border-radius:50%;background:#EFE5D8;display:flex;align-items:center;justify-content:center;flex:none}
-.soon{margin-inline-start:auto;font-size:13px;color:var(--soft);border:1px solid var(--line);border-radius:999px;padding:3px 10px;white-space:nowrap}
-.link{background:none;border:0;font:inherit;font-size:15px;color:#7A4E33;cursor:pointer;min-height:44px}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--ink);font:17px/1.5 'Assistant',system-ui,sans-serif;-webkit-tap-highlight-color:transparent;overflow-x:clip}
+button{font:inherit;color:inherit}
+h1,h2,h3{font-family:'Frank Ruhl Libre',serif;font-weight:400;margin:0;line-height:1.15}
+.view{display:none;min-height:100dvh}
+.view.on{display:block}
+/* ---------- home ---------- */
+#home.on{display:grid;grid-template-columns:minmax(360px,44%) minmax(0,1fr)}
+.hero{position:relative;overflow:hidden;background:#C9B49A;order:2;min-height:300px}
+.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:40% 50%}
+.home-panel{order:1;background:var(--panel);padding:calc(env(safe-area-inset-top) + 48px) clamp(24px,5vw,60px) 32px;display:flex;flex-direction:column;align-items:center;gap:22px}
+.logo{width:150px;height:auto}
+.home-panel h1{font-size:clamp(30px,3.4vw,40px);text-align:center}
+.home-panel p{margin:0;color:var(--soft);text-align:center}
+.big{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;max-width:420px;height:68px;border:0;border-radius:14px;background:var(--btn);color:#fff;font-size:21px;font-weight:600;cursor:pointer}
+.big:hover{background:var(--btn-h)}
+.recent{width:100%;max-width:420px;display:flex;flex-direction:column;gap:10px;margin-top:6px}
+.recent h3{font-size:20px}
+.rec{display:flex;align-items:center;gap:12px;padding:8px;border:1px solid var(--line);border-radius:12px;background:var(--card);cursor:pointer;text-align:right;width:100%}
+.rec img{width:72px;height:54px;object-fit:cover;border-radius:8px;flex:none;background:#e9dfd2}
+.rec b{display:block;font-weight:600}.rec span{font-size:14px;color:var(--soft)}
+.ghost{background:none;border:1px solid var(--line);border-radius:999px;padding:10px 18px;min-height:44px;cursor:pointer;color:var(--soft)}
+.muted{font-size:14px;color:var(--soft)}
+/* ---------- wizard shell ---------- */
+.top{position:sticky;top:0;z-index:5;background:rgba(247,242,235,.96);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:calc(env(safe-area-inset-top) + 12px) clamp(16px,4vw,40px) 12px;display:flex;align-items:center;gap:16px}
+.iconbtn{width:46px;height:46px;border-radius:50%;border:1px solid var(--line);background:var(--card);display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none}
+.top h2{font-size:24px;flex:1}
+.dots{display:flex;gap:6px;flex:none}
+.dots i{width:28px;height:4px;border-radius:2px;background:var(--line)}
+.dots i.done{background:var(--btn)}
+.body{max-width:1100px;margin:0 auto;padding:28px clamp(16px,4vw,40px) 140px}
+.lead{margin:0 0 22px;color:var(--soft);font-size:18px}
+.sec{margin:0 0 30px}
+.sec>h3{font-size:24px;margin-bottom:6px}
+.sec>p{margin:0 0 14px;color:var(--soft);font-size:15px}
+.foot{position:fixed;inset:auto 0 0 0;z-index:5;background:rgba(247,242,235,.97);border-top:1px solid var(--line);padding:14px clamp(16px,4vw,40px) calc(env(safe-area-inset-bottom) + 14px);display:flex;justify-content:center}
+.foot .big{max-width:520px}
+.big:disabled{opacity:.45;cursor:default}
+/* ---------- plans ---------- */
+.slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.slot{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:12px}
+.slot h3{font-size:21px;display:flex;align-items:center;gap:10px}
+.slot p{margin:0;font-size:14px;color:var(--soft)}
+.add{display:flex;align-items:center;justify-content:center;gap:10px;min-height:64px;border:1.5px dashed var(--gold);border-radius:12px;background:#FBF6EF;color:#7A5634;font-weight:600;cursor:pointer;position:relative}
+.add input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.thumbs{display:flex;flex-wrap:wrap;gap:10px}
+.thumb{position:relative;width:96px;height:96px;border-radius:10px;overflow:hidden;border:1px solid var(--line);background:#fff}
+.thumb img{width:100%;height:100%;object-fit:cover}
+.thumb button{position:absolute;top:4px;left:4px;width:30px;height:30px;border-radius:50%;border:0;background:rgba(59,47,39,.75);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center}
+/* ---------- choice tiles ---------- */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px}
+.grid.wide{grid-template-columns:repeat(auto-fill,minmax(170px,1fr))}
+.tile{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:8px;padding:14px 10px 12px;min-height:118px;border:1.5px solid var(--line);border-radius:14px;background:var(--card);cursor:pointer;text-align:center;font-size:15px;line-height:1.25;transition:border-color .15s,background .15s}
+.tile svg.ic{width:40px;height:40px;stroke:#7A5634;fill:none;stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round}
+.tile[aria-pressed=true]{border-color:var(--sel);background:var(--selbg)}
+.tile[aria-pressed=true]::after{content:"";position:absolute;top:8px;left:8px;width:22px;height:22px;border-radius:50%;background:var(--sel) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5 9-10'/%3E%3C/svg%3E") center/14px no-repeat}
+.tile .sw{width:100%;aspect-ratio:4/3;border-radius:9px;border:1px solid rgba(0,0,0,.08);background-size:cover}
+.tile.photo{padding:8px 8px 10px;min-height:0}
+.badge{position:absolute;top:8px;right:8px;font-size:11px;font-weight:700;background:#6E7C56;color:#fff;border-radius:999px;padding:2px 8px}
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chip{min-height:48px;padding:0 20px;border:1.5px solid var(--line);border-radius:999px;background:var(--card);cursor:pointer;font-size:16px}
+.chip[aria-pressed=true]{border-color:var(--sel);background:var(--selbg);font-weight:600}
+textarea,.inp{width:100%;border:1px solid var(--line);border-radius:12px;background:var(--card);padding:14px 16px;font:inherit;font-size:17px;color:var(--ink)}
+textarea{min-height:120px;resize:vertical}
+textarea:focus,.inp:focus{outline:2px solid var(--gold);outline-offset:1px}
+.tabs{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:18px;position:sticky;top:calc(env(safe-area-inset-top) + 71px);z-index:4;background:var(--bg);padding-top:8px}
+.tab{flex:none;min-height:46px;padding:0 18px;border-radius:999px;border:1px solid var(--line);background:var(--card);cursor:pointer;font-size:16px}
+.tab.on{background:var(--ink);color:#F7F2EB;border-color:var(--ink)}
+.note{background:#FBF3E8;border:1px solid #EAD9C2;border-radius:12px;padding:12px 16px;font-size:15px;color:#5C4A3B;margin-bottom:18px;display:flex;gap:10px;align-items:flex-start}
+/* ---------- summary / progress / results ---------- */
+.sum{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:6px 18px}
+.sum div{display:flex;gap:14px;padding:12px 0;border-bottom:1px solid #EEE5D9}
+.sum div:last-child{border:0}
+.sum b{flex:none;width:130px;font-weight:600}
+.sum span{color:var(--soft)}
+.progress{min-height:70dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;text-align:center;padding:40px 20px}
+.spin{width:84px;height:84px;border-radius:50%;border:2px solid var(--line);border-top-color:var(--btn);animation:sp 1.2s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.spin{animation-duration:4s}}
+.results{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px}
+.res{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.res img{display:block;width:100%;aspect-ratio:3/2;object-fit:cover;cursor:zoom-in;background:#e9dfd2}
+.res .acts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:12px}
+.act{display:flex;align-items:center;justify-content:center;gap:8px;min-height:50px;border-radius:10px;border:1px solid var(--line);background:#fff;cursor:pointer;font-size:15px;font-weight:600}
+.act.wa{background:#2F6B4F;border-color:#2F6B4F;color:#fff}
+.act.sis{background:var(--btn);border-color:var(--btn);color:#fff}
+.err{color:#8A3B2A;background:#F8E9E4;border:1px solid #EBC9BE;border-radius:12px;padding:12px 16px;margin:12px 0}
+.ready{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.ready h2{font-size:34px}
+.lb{position:fixed;inset:0;z-index:20;background:rgba(30,24,20,.92);display:none;align-items:center;justify-content:center;padding:20px}
+.lb.on{display:flex}
+.lb img{max-width:100%;max-height:100%;border-radius:8px}
+.lb button{position:absolute;top:calc(env(safe-area-inset-top) + 14px);left:14px}
+/* settings */
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:18px}
+.field label{font-weight:600}
+.toast{position:fixed;bottom:110px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 20px;border-radius:999px;font-size:15px;z-index:30;display:none}
+.toast.on{display:block}
+:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 @media (max-width:900px),(orientation:portrait){
-  .app{grid-template-columns:minmax(0,1fr);grid-template-rows:clamp(240px,40dvh,520px) auto}
-  .photo{order:1}.panel{order:2;border-radius:24px 24px 0 0;margin-top:-24px;position:relative}
+  #home.on{grid-template-columns:minmax(0,1fr);grid-template-rows:clamp(220px,34dvh,460px) auto}
+  .hero{order:1}.home-panel{order:2;border-radius:24px 24px 0 0;margin-top:-24px;position:relative;padding-top:32px}
 }
+@media (max-width:560px){.dots{display:none}.sum b{width:96px}}
 </style>
 </head>
 <body>
-<div class="app" id="app">
-  <main class="panel">
-    <div class="top">
-      <img class="logo" src="logo.png" alt="YB – יפה ברוינר" width="238" height="176">
-      <h1>הדמיות של יפה ברוינר</h1>
-      <div class="rule" aria-hidden="true"></div>
-      <form id="login" novalidate>
-        <label class="field">
-          <span class="sr">אימייל</span>
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9A8670" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
-          <input id="email" type="email" placeholder="אימייל" autocomplete="email">
-        </label>
-        <label class="field">
-          <span class="sr">סיסמה</span>
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9A8670" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
-          <input id="pass" type="password" placeholder="סיסמה" autocomplete="current-password">
-        </label>
-        <button class="btn" type="submit">כניסה</button>
-        <p class="msg" id="msg" role="status"></p>
-      </form>
-    </div>
 
-    <section class="home" aria-live="polite">
-      <img class="logo" src="logo.png" alt="" width="238" height="176" style="width:110px">
-      <h2>שלום יפה</h2>
-      <p>מה נעשה היום?</p>
-      <div class="cards">
-        <button class="card" type="button"><span class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#8A6A4A" stroke-width="1.4" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M3 12h7v9M10 3v5M14 12h7M14 12v4"/></svg></span><div><b>העלאת תוכנית</b><span>תמונה או PDF של התוכנית</span></div><em class="soon">בקרוב</em></button>
-        <button class="card" type="button"><span class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#8A6A4A" stroke-width="1.4" stroke-linejoin="round" aria-hidden="true"><path d="M4 16c0-3 2-4 4-4h8c2 0 4 1 4 4v2H4z"/><path d="M6 12V9a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v3M6 18v2M18 18v2"/></svg></span><div><b>בחירת סגנון וחומרים</b><span>סגנון, צבעים, ריצוף ותאורה</span></div><em class="soon">בקרוב</em></button>
-        <button class="card" type="button"><span class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#8A6A4A" stroke-width="1.4" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="1"/><path d="M3 16l5-5 4 4 3-3 6 6"/><circle cx="16" cy="9" r="1.5"/></svg></span><div><b>ההדמיות שלי</b><span>כל ההדמיות שנוצרו</span></div><em class="soon">בקרוב</em></button>
-      </div>
-      <button class="link" type="button" id="out">יציאה</button>
-    </section>
+<!-- ================= HOME ================= -->
+<section class="view on" id="home">
+  <div class="home-panel">
+    <img class="logo" src="logo.png" alt="YB – יפה ברוינר" width="238" height="176">
+    <h1>שלום יפה</h1>
+    <p>מעלים תוכנית, בוחרים – וההדמיות מגיעות.</p>
+    <button class="big" type="button" id="startBtn">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+      הדמיה חדשה
+    </button>
+    <div class="recent" id="recent"></div>
+    <button class="ghost" type="button" id="setBtn">הגדרות</button>
+  </div>
+  <div class="hero"><img src="room.jpg" alt="הדמיה של סלון מעוצב באור טבעי"></div>
+</section>
 
-    <div class="steps" aria-label="איך זה עובד">
-      <div class="step"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#8A6A4A" stroke-width="1.2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M3 12h7v9M10 3v5M14 12h7M14 12v4"/></svg>העלאת תוכנית דירה</div>
-      <svg class="chev" width="12" height="24" viewBox="0 0 12 24" fill="none" stroke="#B8A58E" stroke-width="1.5" aria-hidden="true"><path d="M9 7l-5 5 5 5"/></svg>
-      <div class="step"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#8A6A4A" stroke-width="1.2" stroke-linejoin="round" aria-hidden="true"><path d="M5 20l3-15 4 1-3 15zM10 6l5-1 3 13-5 1M13 5l5-2 3 12-3 1"/></svg>בחירת סגנון וחומרים</div>
-      <svg class="chev" width="12" height="24" viewBox="0 0 12 24" fill="none" stroke="#B8A58E" stroke-width="1.5" aria-hidden="true"><path d="M9 7l-5 5 5 5"/></svg>
-      <div class="step"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#8A6A4A" stroke-width="1.2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="1"/><path d="M3 16l5-5 4 4 3-3 6 6"/><circle cx="16" cy="9" r="1.5"/></svg>קבלת הדמיות</div>
+<!-- ================= WIZARD ================= -->
+<section class="view" id="wiz">
+  <header class="top">
+    <button class="iconbtn" type="button" id="backBtn" aria-label="חזרה">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+    </button>
+    <h2 id="stepTitle"></h2>
+    <div class="dots" id="dots" aria-hidden="true"></div>
+  </header>
+  <div class="body" id="stepBody"></div>
+  <div class="foot"><button class="big" type="button" id="nextBtn">המשך</button></div>
+</section>
+
+<!-- ================= PROGRESS ================= -->
+<section class="view" id="prog">
+  <div class="progress">
+    <img class="logo" src="logo.png" alt="" width="238" height="176" style="width:110px">
+    <div class="spin" aria-hidden="true"></div>
+    <h2 id="progTitle" style="font-size:30px">ההדמיות בהכנה</h2>
+    <p id="progText" class="muted" style="font-size:17px;max-width:460px">ChatGPT מעצב את החלל לפי הבחירות שלך. זה לוקח בדרך כלל דקה עד שלוש – אפשר להשאיר את המסך פתוח.</p>
+    <div id="progErr"></div>
+  </div>
+</section>
+
+<!-- ================= RESULTS ================= -->
+<section class="view" id="res">
+  <header class="top">
+    <button class="iconbtn" type="button" id="homeBtn" aria-label="למסך הבית">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-7 8 7v9h-5v-6H9v6H4z"/></svg>
+    </button>
+    <h2 id="resTitle">ההדמיות מוכנות</h2>
+  </header>
+  <div class="body">
+    <div class="ready"><h2>מוכן ✓</h2></div>
+    <p class="lead">לחצי על תמונה כדי לראות אותה בגדול. מתחת לכל תמונה – שליחה.</p>
+    <div class="results" id="resGrid"></div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:26px">
+      <button class="ghost" type="button" id="againBtn">עוד הדמיות מאותן בחירות</button>
+      <button class="ghost" type="button" id="newBtn">הדמיה חדשה</button>
     </div>
-  </main>
-  <div class="photo"><img src="room.jpg" alt="הדמיה של סלון מעוצב באור טבעי, ספה בהירה ושולחן עגול מעץ"></div>
-</div>
+  </div>
+</section>
+
+<!-- ================= SETTINGS ================= -->
+<section class="view" id="set">
+  <header class="top">
+    <button class="iconbtn" type="button" id="setBack" aria-label="חזרה">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+    </button>
+    <h2>הגדרות</h2>
+  </header>
+  <div class="body" style="max-width:640px">
+    <div class="note">את ההגדרות האלה ממלאים פעם אחת בכל טאבלט. הן נשמרות רק במכשיר הזה.</div>
+    <div class="field">
+      <label for="kKey">מפתח ChatGPT ‏(OpenAI API key)</label>
+      <input class="inp" id="kKey" type="password" autocomplete="off" dir="ltr" placeholder="sk-...">
+      <span class="muted">מתחיל ב-sk-. בלעדיו האפליקציה לא יכולה לזהות פריטים וליצור הדמיות.</span>
+    </div>
+    <div class="field">
+      <label for="kSis">מספר הוואטסאפ של האחות</label>
+      <input class="inp" id="kSis" type="tel" dir="ltr" placeholder="050-0000000">
+    </div>
+    <div class="field">
+      <label for="kQ">איכות הדמיה</label>
+      <select class="inp" id="kQ">
+        <option value="medium">רגילה – מהירה וזולה יותר</option>
+        <option value="high">גבוהה – יפה יותר, איטית ויקרה יותר</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="kN">כמה הדמיות בכל פעם</label>
+      <select class="inp" id="kN"><option>1</option><option selected>2</option><option>3</option><option>4</option></select>
+    </div>
+    <details style="margin-bottom:20px"><summary class="muted" style="cursor:pointer;min-height:44px">מתקדם</summary>
+      <div class="field" style="margin-top:12px"><label for="kImg">מודל תמונות</label><input class="inp" id="kImg" dir="ltr" placeholder="gpt-image-2"></div>
+      <div class="field"><label for="kTxt">מודל זיהוי</label><input class="inp" id="kTxt" dir="ltr" placeholder="אוטומטי"></div>
+    </details>
+    <button class="big" type="button" id="saveSet">שמירה</button>
+  </div>
+</section>
+
+<div class="lb" id="lb" role="dialog" aria-label="תמונה בגדול"><button class="iconbtn" type="button" id="lbClose" aria-label="סגירה"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button><img id="lbImg" alt="הדמיה"></div>
+<div class="toast" id="toast" role="status"></div>
+
 <script>
 {
-  const app=document.getElementById('app'),msg=document.getElementById('msg');
-  document.getElementById('login').addEventListener('submit',e=>{
-    e.preventDefault();
-    const em=document.getElementById('email').value.trim();
-    if(!em){msg.textContent='נא להזין אימייל';document.getElementById('email').focus();return;}
-    msg.textContent='';app.classList.add('in');
-    try{localStorage.setItem('yb-in','1')}catch(_){}
-  });
-  document.getElementById('out').addEventListener('click',()=>{app.classList.remove('in');try{localStorage.removeItem('yb-in')}catch(_){}});
-  try{if(localStorage.getItem('yb-in')==='1')app.classList.add('in')}catch(_){}
+/* ================= DATA ================= */
+const P = (d) => `<svg class="ic" viewBox="0 0 24 24" aria-hidden="true">${d}</svg>`;
+const ICON = {
+  washer:'<rect x="4" y="3" width="16" height="18" rx="2"/><circle cx="12" cy="13" r="4.5"/><path d="M7 6.5h3"/><circle cx="16" cy="6.5" r=".7"/>',
+  dryer:'<rect x="4" y="3" width="16" height="18" rx="2"/><circle cx="12" cy="13" r="4.5"/><path d="M10 12.5c1 1 3-1 4 0M7 6.5h3"/>',
+  fridge:'<rect x="6" y="2.5" width="12" height="19" rx="1.5"/><path d="M6 9h12M9 5.5v2M9 11.5v3"/>',
+  stove:'<rect x="3" y="6" width="18" height="12" rx="1.5"/><circle cx="8" cy="10" r="1.8"/><circle cx="16" cy="10" r="1.8"/><circle cx="8" cy="14.5" r="1.3"/><circle cx="16" cy="14.5" r="1.3"/>',
+  oven:'<rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M4 8h16M7 5.5h1M10 5.5h1"/><rect x="7" y="11" width="10" height="7" rx="1"/>',
+  dishwasher:'<rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M4 7h16M8 5h3M8 12l1.5 3M12 11v4M16 12l-1.5 3"/>',
+  ksink:'<path d="M3 10h18v3a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5z"/><path d="M14 10V6a2 2 0 0 1 4 0"/>',
+  island:'<rect x="3" y="8" width="18" height="6" rx="1"/><path d="M5 14v6M19 14v6"/><circle cx="8" cy="4.5" r="1.2"/><circle cx="16" cy="4.5" r="1.2"/>',
+  dining:'<path d="M3 10h18M5 10v9M19 10v9"/><circle cx="8" cy="6" r="1.5"/><circle cx="16" cy="6" r="1.5"/>',
+  sofa:'<path d="M4 11V8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3"/><path d="M2 13a2 2 0 0 1 4 0v2h12v-2a2 2 0 0 1 4 0v5H2z"/><path d="M4 18v2M20 18v2"/>',
+  armchair:'<path d="M6 11V7a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v4"/><path d="M4 12a2 2 0 0 1 4 0v2h8v-2a2 2 0 0 1 4 0v5H4z"/><path d="M6 17v3M18 17v3"/>',
+  dbed:'<rect x="3" y="4" width="18" height="16" rx="1.5"/><rect x="5" y="6" width="6" height="4" rx="1"/><rect x="13" y="6" width="6" height="4" rx="1"/><path d="M3 12h18"/>',
+  sbed:'<rect x="7" y="3" width="10" height="18" rx="1.5"/><rect x="9" y="5" width="6" height="3.5" rx="1"/><path d="M7 11h10"/>',
+  crib:'<rect x="4" y="6" width="16" height="12" rx="1"/><path d="M7 6v12M10 6v12M14 6v12M17 6v12M5 18v2M19 18v2"/>',
+  wardrobe:'<rect x="4" y="3" width="16" height="18" rx="1"/><path d="M12 3v18M10 11v2M14 11v2"/>',
+  desk:'<path d="M3 9h18M5 9v11M19 9v11M13 9v6h6"/>',
+  tv:'<rect x="3" y="5" width="18" height="11" rx="1"/><path d="M9 20h6M12 16v4"/>',
+  books:'<rect x="5" y="3" width="14" height="18" rx="1"/><path d="M5 9h14M5 15h14M8 4v5M10 4v5M14 10v5"/>',
+  fireplace:'<path d="M3 6h18M4 6v14h16V6"/><path d="M8 20v-7a4 4 0 0 1 8 0v7"/><path d="M12 19c-1.5 0-2-1-2-2 0-1.5 2-2.5 2-4 1 1 2 2 2 4 0 1-.5 2-2 2z"/>',
+  toilet:'<path d="M7 3h10v6H7z"/><path d="M5 9h14a7 7 0 0 1-14 0z"/><path d="M9 15.5l-1 5.5h8l-1-5.5"/>',
+  bsink:'<path d="M4 9h16a8 5 0 0 1-16 0z"/><path d="M12 9V5h3M12 14v7"/>',
+  bathtub:'<path d="M3 12h18v2a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5z"/><path d="M6 12V5a2 2 0 0 1 4 0M7 19l-1 2M17 19l1 2"/>',
+  shower:'<rect x="4" y="3" width="16" height="18" rx="1"/><path d="M16 3v3a3 3 0 0 1-6 0"/><path d="M9 10v1M13 10v1M11 13v1M8 15v1M14 15v1"/>',
+  vanity:'<rect x="4" y="11" width="16" height="9" rx="1"/><path d="M12 11v9M10 15v2M14 15v2"/><rect x="7" y="3" width="10" height="6" rx="1"/>',
+  stairs:'<path d="M3 20h5v-5h5v-5h5V5h3"/>',
+  window:'<rect x="4" y="3" width="16" height="18" rx="1"/><path d="M12 3v18M4 12h16"/>',
+  sliding:'<rect x="3" y="4" width="18" height="16"/><path d="M12 4v16M9 11l-2 1 2 1M15 11l2 1-2 1"/>',
+  balcony:'<path d="M3 11h18M4 11v9M20 11v9M8 11v9M12 11v9M16 11v9M3 20h18"/><path d="M12 8c-2 0-3-2-3-4 2 0 3 2 3 4zm0 0c2 0 3-2 3-4-2 0-3 2-3 4z"/>',
+  dressing:'<path d="M12 6a2 2 0 1 1 2 2l-2 1.5L3 16h18l-9-6.5"/><path d="M3 16v2h18v-2"/>',
+  aron:'<path d="M5 21V8a7 5 0 0 1 14 0v13z"/><path d="M12 4v17M9.5 13h.01M14.5 13h.01"/>',
+  bima:'<path d="M3 12h18M4 12v8h16v-8M7 12V9h10v3M12 6v3"/>',
+  pews:'<path d="M3 8h18M3 14h18M5 8v4M19 8v4M5 14v5M19 14v5"/>',
+  mechitza:'<path d="M3 20h18M6 20V6M12 20V4M18 20V6M6 9h12M6 14h12"/>',
+  rtables:'<circle cx="12" cy="12" r="5"/><circle cx="12" cy="4" r="1.4"/><circle cx="12" cy="20" r="1.4"/><circle cx="4" cy="12" r="1.4"/><circle cx="20" cy="12" r="1.4"/>',
+  stage:'<path d="M2 16h20v4H2zM4 16V5h16v11"/><path d="M4 5c3 2 5 5 5 11M20 5c-3 2-5 5-5 11"/>',
+  bar:'<path d="M3 10h18M4 10v10M20 10v10M8 3l1.2 4h1.6L12 3zM10 7v3"/>',
+  dance:'<rect x="3" y="3" width="18" height="18"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/>',
+  meeting:'<rect x="6" y="8" width="12" height="8" rx="1"/><circle cx="4" cy="12" r="1.3"/><circle cx="20" cy="12" r="1.3"/><circle cx="9" cy="5" r="1.3"/><circle cx="15" cy="5" r="1.3"/><circle cx="9" cy="19" r="1.3"/><circle cx="15" cy="19" r="1.3"/>',
+  counter:'<path d="M3 9h18v11H3zM3 13h18M8 5h8"/>',
+  plants:'<path d="M8 21h8l1-6H7z"/><path d="M12 15c0-4-2-7-5-8 0 4 2 7 5 8zm0 0c0-4 2-7 5-8 0 4-2 7-5 8z"/>',
+  pergola:'<path d="M3 21V7M21 21V7M2 7h20M2 10h20M6 4v6M12 4v6M18 4v6"/>',
+  pool:'<rect x="3" y="7" width="18" height="12" rx="2"/><path d="M6 13c1.5-1 3 1 4.5 0s3 1 4.5 0 3 1 3 0"/>',
+  grill:'<path d="M5 10h14a7 7 0 0 1-14 0z"/><path d="M8 16l-2 5M16 16l2 5M9 7c0-1 1-1 1-2M13 7c0-1 1-1 1-2"/>'
+};
+const TYPES = [
+  {id:'dira',t:'דירה',en:'apartment',ic:'sofa'},
+  {id:'bayit',t:'בית פרטי',en:'private house',ic:'stairs'},
+  {id:'knesset',t:'בית כנסת',en:'synagogue',ic:'aron'},
+  {id:'ulam',t:'אולם אירועים',en:'event hall',ic:'rtables'},
+  {id:'misrad',t:'משרד',en:'office',ic:'meeting'},
+  {id:'esek',t:'חנות / עסק',en:'retail store / business',ic:'counter'},
+  {id:'gan',t:'גינה / מרפסת',en:'garden / balcony',ic:'plants'}
+];
+const ROOMS = {
+  dira:['סלון','מטבח','פינת אוכל','חדר שינה הורים','חדר ילדים','חדר רחצה','שירותי אורחים','מרפסת','כניסה','כל הדירה'],
+  bayit:['סלון','מטבח','פינת אוכל','חדר שינה הורים','חדר ילדים','חדר רחצה','חדר עבודה','מדרגות','חזית הבית','גינה','כל הבית'],
+  knesset:['אולם התפילה','עזרת נשים','ארון הקודש','הבימה','הכניסה','בית המדרש','כל המבנה'],
+  ulam:['אולם ראשי','קבלת פנים','רחבת ריקודים','במה / חופה','הכניסה','כל האולם'],
+  misrad:['חדר ישיבות','חלל עבודה','חדר מנהל','קבלה','מטבחון','כל המשרד'],
+  esek:['חלל המכירה','דלפק','חלון ראווה','כל החנות'],
+  gan:['מרפסת','גינה','פרגולה','בריכה','פינת ישיבה']
+};
+const STYLES = ['מודרני','מודרני חם','קלאסי','ניאו־קלאסי','מינימליסטי','כפרי','סקנדינבי','יפנדי','בוהו','תעשייתי','ים־תיכוני','יוקרתי'];
+const STYLE_EN = {'מודרני':'modern','מודרני חם':'warm modern','קלאסי':'classic','ניאו־קלאסי':'neoclassical','מינימליסטי':'minimalist','כפרי':'rustic farmhouse','סקנדינבי':'Scandinavian','יפנדי':'Japandi','בוהו':'boho','תעשייתי':'industrial','ים־תיכוני':'Mediterranean','יוקרתי':'luxury high-end'};
+const ITEMS = [
+  {g:'מטבח',list:[['fridge','מקרר','refrigerator'],['stove','כיריים','cooktop'],['oven','תנור','built-in oven'],['dishwasher','מדיח כלים','dishwasher'],['ksink','כיור מטבח','kitchen sink'],['island','אי מטבח','kitchen island with stools'],['dining','שולחן אוכל','dining table with chairs']]},
+  {g:'מגורים',list:[['sofa','ספה','sofa'],['armchair','כורסה','armchair'],['tv','טלוויזיה','TV wall unit'],['books','ספרייה','bookshelves'],['fireplace','אח','fireplace'],['desk','שולחן עבודה','work desk']]},
+  {g:'שינה',list:[['dbed','מיטה זוגית','double bed'],['sbed','מיטת יחיד','single bed'],['crib','מיטת תינוק','baby crib'],['wardrobe','ארון בגדים','wardrobe'],['dressing','חדר ארונות','walk-in closet']]},
+  {g:'רחצה וכביסה',list:[['toilet','שירותים','toilet'],['bsink','כיור רחצה','bathroom sink'],['vanity','ארון אמבטיה','bathroom vanity with mirror'],['bathtub','אמבטיה','bathtub'],['shower','מקלחון','walk-in glass shower'],['washer','מכונת כביסה','washing machine'],['dryer','מייבש','tumble dryer']]},
+  {g:'מבנה',list:[['window','חלון','windows'],['sliding','דלת הזזה','sliding glass door'],['stairs','מדרגות','staircase'],['balcony','מרפסת','balcony']]},
+  {g:'בית כנסת',list:[['aron','ארון קודש','Torah ark (Aron Kodesh)'],['bima','בימה','bimah'],['pews','ספסלים / מקומות ישיבה','synagogue seating benches'],['mechitza','מחיצה','mechitza partition']]},
+  {g:'אולם ועסק',list:[['rtables','שולחנות עגולים','round banquet tables'],['stage','במה','stage'],['dance','רחבת ריקודים','dance floor'],['bar','בר','bar counter'],['meeting','שולחן ישיבות','meeting table'],['counter','דלפק','reception counter']]},
+  {g:'חוץ',list:[['plants','צמחייה','plants and greenery'],['pergola','פרגולה','pergola'],['pool','בריכה','swimming pool'],['grill','פינת מנגל','outdoor grill area']]}
+];
+const ITEM_BY = {}; ITEMS.forEach(g=>g.list.forEach(([id,t,en])=>ITEM_BY[id]={t,en}));
+
+/* ---- texture generators (SVG data URIs) ---- */
+const U = s => `url("data:image/svg+xml,${encodeURIComponent(s)}")`;
+const SV = (w,h,inner) => `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">${inner}</svg>`;
+const marble = (base,vein,seed=3,fx=.006,fy=.02) => U(SV(240,180,`<filter id="f" x="0" y="0" width="100%" height="100%"><feTurbulence type="turbulence" baseFrequency="${fx} ${fy}" numOctaves="5" seed="${seed}"/><feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -7 0 0 0 1.05"/></filter><rect width="240" height="180" fill="${base}"/><rect width="240" height="180" fill="${vein}" filter="url(#f)" opacity=".75"/>`));
+const noise = (base,ink,op=.35,f='.9',oct=3) => U(SV(240,180,`<filter id="n" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="${f}" numOctaves="${oct}" seed="7"/><feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1.6 0 0 0 -.6"/></filter><rect width="240" height="180" fill="${base}"/><rect width="240" height="180" fill="${ink}" filter="url(#n)" opacity="${op}"/>`));
+const planks = (a,b,c) => U(SV(240,180,`<filter id="w" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".004 .22" numOctaves="3" seed="4"/><feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1.4 0 0 0 -.45"/></filter><rect width="240" height="180" fill="${a}"/><rect x="0" y="30" width="240" height="30" fill="${b}"/><rect x="0" y="90" width="240" height="30" fill="${b}"/><rect x="0" y="150" width="240" height="30" fill="${b}"/><rect width="240" height="180" fill="${c}" filter="url(#w)" opacity=".5"/><g stroke="${c}" stroke-opacity=".45" stroke-width="1">${[30,60,90,120,150].map(y=>`<path d="M0 ${y}H240"/>`).join('')}<path d="M80 0v30M190 30v30M40 60v30M150 90v30M210 120v30M100 150v30"/></g>`));
+const herring = (a,b,c,chev=false) => { let s=''; for(let i=-2;i<12;i++)for(let j=-2;j<10;j++){const x=i*40,y=j*40+i*0; s+= chev
+  ? `<path d="M${x} ${y+j*0}l20 20v14l-20-20z" fill="${(i+j)%2?a:b}"/><path d="M${x+20} ${y+20}l20-20v14l-20 20z" fill="${(i+j)%2?b:a}"/>`
+  : `<rect x="${x}" y="${y}" width="40" height="13" transform="rotate(45 ${x} ${y})" fill="${(i+j)%2?a:b}" stroke="${c}" stroke-width=".8"/><rect x="${x+9}" y="${y+9}" width="40" height="13" transform="rotate(-45 ${x+9} ${y+9})" fill="${(i+j)%2?b:a}" stroke="${c}" stroke-width=".8"/>`;}
+  return U(SV(240,180,`<rect width="240" height="180" fill="${a}"/>${s}`)); };
+const checker = (a,b,sz=40,rot=0) => U(SV(240,180,`<defs><pattern id="p" width="${sz*2}" height="${sz*2}" patternUnits="userSpaceOnUse" patternTransform="rotate(${rot})"><rect width="${sz*2}" height="${sz*2}" fill="${a}"/><rect width="${sz}" height="${sz}" fill="${b}"/><rect x="${sz}" y="${sz}" width="${sz}" height="${sz}" fill="${b}"/></pattern></defs><rect width="240" height="180" fill="url(#p)"/>`));
+const subway = (tile,grout,w=40,h=18,vert=false) => U(SV(240,180,`<defs><pattern id="p" width="${w}" height="${h*2}" patternUnits="userSpaceOnUse" ${vert?'patternTransform="rotate(90)"':''}><rect width="${w}" height="${h*2}" fill="${grout}"/><rect x="1" y="1" width="${w-2}" height="${h-2}" rx="1" fill="${tile}"/><rect x="${-w/2+1}" y="${h+1}" width="${w-2}" height="${h-2}" rx="1" fill="${tile}"/><rect x="${w/2+1}" y="${h+1}" width="${w-2}" height="${h-2}" rx="1" fill="${tile}"/></pattern></defs><rect width="240" height="180" fill="url(#p)"/>`));
+const grid = (tile,grout,sz=60,big=false) => U(SV(240,180,`<defs><pattern id="p" width="${sz}" height="${sz}" patternUnits="userSpaceOnUse"><rect width="${sz}" height="${sz}" fill="${grout}"/><rect x="1" y="1" width="${sz-2}" height="${sz-2}" fill="${tile}"/></pattern></defs><rect width="240" height="180" fill="url(#p)"/>`));
+const hexes = (a,b,grout) => { let s=''; const r=16,w=r*1.732; for(let row=-1;row<9;row++)for(let col=-1;col<11;col++){const cx=col*w+(row%2?w/2:0),cy=row*r*1.5; const pts=[0,1,2,3,4,5].map(k=>{const an=Math.PI/3*k+Math.PI/6;return `${(cx+r*Math.cos(an)).toFixed(1)},${(cy+r*Math.sin(an)).toFixed(1)}`}).join(' '); s+=`<polygon points="${pts}" fill="${(row*7+col*3)%5===0?b:a}" stroke="${grout}" stroke-width="1.5"/>`;} return U(SV(240,180,s)); };
+const zellige = (tones,grout) => { let s=`<rect width="240" height="180" fill="${grout}"/>`; let k=0; for(let y=0;y<180;y+=20)for(let x=0;x<240;x+=20){s+=`<rect x="${x+1}" y="${y+1}" width="18" height="18" rx="1.5" fill="${tones[(k=(k*7+3)%tones.length)]}"/>`;} return U(SV(240,180,s)); };
+const mosaic = (tones) => { let s=''; let k=1; for(let y=0;y<180;y+=10)for(let x=0;x<240;x+=10){k=(k*13+5)%97; s+=`<rect x="${x+.5}" y="${y+.5}" width="9" height="9" fill="${tones[k%tones.length]}"/>`;} return U(SV(240,180,`<rect width="240" height="180" fill="#ddd"/>${s}`)); };
+const terrazzo = (base,chips) => { let s=`<rect width="240" height="180" fill="${base}"/>`; let k=11; for(let i=0;i<170;i++){k=(k*9301+49297)%233280; const x=k%240; k=(k*9301+49297)%233280; const y=k%180; const r=1+(k%5); s+=`<ellipse cx="${x}" cy="${y}" rx="${r}" ry="${r*.7}" transform="rotate(${k%180} ${x} ${y})" fill="${chips[i%chips.length]}"/>`;} return U(SV(240,180,s)); };
+const encaustic = (bg,a,b) => U(SV(240,180,`<defs><pattern id="p" width="60" height="60" patternUnits="userSpaceOnUse"><rect width="60" height="60" fill="${bg}"/><path d="M30 4l8 18 18 8-18 8-8 18-8-18-18-8 18-8z" fill="${a}"/><circle cx="30" cy="30" r="5" fill="${bg}"/><path d="M0 0h10L0 10zM60 0H50l10 10zM0 60h10L0 50zM60 60H50l10-10z" fill="${b}"/><rect x="0" y="0" width="60" height="60" fill="none" stroke="${b}" stroke-opacity=".3"/></pattern></defs><rect width="240" height="180" fill="url(#p)"/>`));
+const stripes = (a,b,w=14) => U(SV(240,180,`<defs><pattern id="p" width="${w*2}" height="10" patternUnits="userSpaceOnUse"><rect width="${w*2}" height="10" fill="${a}"/><rect width="${w}" height="10" fill="${b}"/></pattern></defs><rect width="240" height="180" fill="url(#p)"/>`));
+const floral = (bg,a,b) => U(SV(240,180,`<defs><pattern id="p" width="60" height="60" patternUnits="userSpaceOnUse"><rect width="60" height="60" fill="${bg}"/><g fill="${a}"><circle cx="15" cy="15" r="4"/><ellipse cx="15" cy="7" rx="3" ry="5"/><ellipse cx="15" cy="23" rx="3" ry="5"/><ellipse cx="7" cy="15" rx="5" ry="3"/><ellipse cx="23" cy="15" rx="5" ry="3"/></g><g fill="${b}"><ellipse cx="45" cy="42" rx="7" ry="3" transform="rotate(-35 45 42)"/><ellipse cx="38" cy="48" rx="6" ry="2.5" transform="rotate(30 38 48)"/></g><path d="M41 45c-6 6-10 8-14 9" stroke="${b}" fill="none"/></pattern></defs><rect width="240" height="180" fill="url(#p)"/>`));
+const geo = (bg,a) => U(SV(240,180,`<defs><pattern id="p" width="40" height="40" patternUnits="userSpaceOnUse"><rect width="40" height="40" fill="${bg}"/><path d="M20 0L40 20 20 40 0 20z" fill="none" stroke="${a}" stroke-width="1.2"/><circle cx="20" cy="20" r="2.5" fill="${a}"/></pattern></defs><rect width="240" height="180" fill="url(#p)"/>`));
+const damask = (bg,a) => U(SV(240,180,`<defs><pattern id="p" width="60" height="80" patternUnits="userSpaceOnUse"><rect width="60" height="80" fill="${bg}"/><path d="M30 6c8 8 14 16 14 26S36 50 30 58c-6-8-14-16-14-26S22 14 30 6z" fill="${a}"/><path d="M30 20c4 4 6 8 6 12s-3 8-6 12c-3-4-6-8-6-12s2-8 6-12z" fill="${bg}"/><path d="M30 60v14M24 68h12" stroke="${a}" stroke-width="2"/></pattern></defs><rect width="240" height="180" fill="url(#p)"/>`));
+const slats = (bg,a) => U(SV(240,180,`<rect width="240" height="180" fill="${bg}"/>${Array.from({length:24},(_,i)=>`<rect x="${i*10+2}" y="0" width="7" height="180" fill="${a}"/>`).join('')}`));
+const solid = c => c;
+
+const wallScene = (paint, extra) => U(SV(240,180,`<rect width="240" height="180" fill="${paint}"/><rect y="160" width="240" height="20" fill="#C9AE8E"/><rect y="156" width="240" height="5" fill="#fff" opacity=".7"/>${extra}`));
+const FRAMES = [
+  {id:'panels',t:'מסגרות פנלים',en:'classic decorative wall moulding panels (picture-frame mouldings)',sw:wallScene('#EFE8DE','<g fill="none" stroke="#fff" stroke-width="3"><rect x="20" y="22" width="60" height="70"/><rect x="90" y="22" width="60" height="70"/><rect x="160" y="22" width="60" height="70"/><rect x="20" y="104" width="60" height="42"/><rect x="90" y="104" width="60" height="42"/><rect x="160" y="104" width="60" height="42"/></g><g fill="none" stroke="#000" stroke-opacity=".07" stroke-width="1"><rect x="22" y="24" width="56" height="66"/><rect x="92" y="24" width="56" height="66"/><rect x="162" y="24" width="56" height="66"/></g>')},
+  {id:'wainscot',t:'חיפוי חצי קיר (ווינסקוט)',en:'wainscoting on the lower half of the walls',sw:wallScene('#E6DCCD','<rect y="92" width="240" height="64" fill="#F4EFE7"/><rect y="88" width="240" height="6" fill="#fff"/><g fill="none" stroke="#000" stroke-opacity=".08"><rect x="12" y="102" width="44" height="44"/><rect x="68" y="102" width="44" height="44"/><rect x="124" y="102" width="44" height="44"/><rect x="180" y="102" width="44" height="44"/></g>')},
+  {id:'boiserie',t:'בואזרי מלא',en:'full-height French boiserie wall panelling',sw:wallScene('#F2ECE3','<g fill="none" stroke="#fff" stroke-width="4"><rect x="14" y="12" width="64" height="138" rx="2"/><rect x="88" y="12" width="64" height="138" rx="2"/><rect x="162" y="12" width="64" height="138" rx="2"/></g><g fill="none" stroke="#000" stroke-opacity=".08"><path d="M24 30q22-14 44 0M98 30q22-14 44 0M172 30q22-14 44 0"/><rect x="24" y="40" width="44" height="100"/><rect x="98" y="40" width="44" height="100"/><rect x="172" y="40" width="44" height="100"/></g>')},
+  {id:'cornice',t:'קרניז תקרה',en:'ornate crown moulding / cornice at the ceiling',sw:wallScene('#EDE6DB','<rect width="240" height="16" fill="#FAF7F2"/><rect y="16" width="240" height="4" fill="#fff"/><rect y="20" width="240" height="2" fill="#000" opacity=".08"/><path d="M0 12h240" stroke="#000" stroke-opacity=".06"/>')},
+  {id:'arches',t:'קשתות ונישות',en:'arched niches and arched openings',sw:wallScene('#E9DCCB','<path d="M30 156V70a30 30 0 0 1 60 0v86z" fill="#DCC9B2"/><path d="M150 156V60a40 40 0 0 1 80 0v96z" fill="#DCC9B2"/><rect x="150" y="100" width="80" height="4" fill="#B89A78"/>')},
+  {id:'slats',t:'לוחות עץ (רפפות)',en:'vertical wood slat wall panelling',sw:slats('#4A3528','#9C6E48')},
+  {id:'stonewall',t:'קיר אבן',en:'natural stone feature wall',sw:noise('#C8B9A4','#6B5A48',.55,'.035',4)},
+  {id:'microcement',t:'מיקרוטופינג',en:'microcement walls',sw:noise('#BDB5AA','#6E665D',.35,'.012',4)}
+];
+const PAINT = [['#F4F1EA','לבן שבור','off-white'],['#EFE5D4','שמנת','cream'],['#E3D3BD','בז׳ חם','warm beige'],['#CFC5B7','גרייג׳','greige'],['#B9B7B0','אפור יוני','dove grey'],['#A9B39A','ירוק מרווה','sage green'],['#6F7653','ירוק זית','olive green'],['#8D9DA6','כחול עשן','smoky blue'],['#2F4256','כחול כהה','deep navy'],['#C08A6A','טרקוטה','terracotta'],['#D8B7AE','ורוד עתיק','dusty pink'],['#3A3632','פחם','charcoal']];
+const WALLP = [
+  {id:'wp-none',t:'בלי טפט',en:'',sw:solid('#F4F1EA')},
+  {id:'wp-linen',t:'טקסטורת פשתן',en:'linen-texture wallpaper',sw:noise('#E6DDCF','#9C8C76',.35,'.6 .02',2)},
+  {id:'wp-stripes',t:'פסים עדינים',en:'subtle vertical stripe wallpaper',sw:stripes('#EDE6DA','#E0D4C2',10)},
+  {id:'wp-floral',t:'פרחוני',en:'elegant floral wallpaper',sw:floral('#EEE6DA','#C79C8A','#8C9A7A')},
+  {id:'wp-geo',t:'גיאומטרי',en:'geometric pattern wallpaper',sw:geo('#E9E3D9','#B8946A')},
+  {id:'wp-damask',t:'דמשק',en:'classic damask wallpaper',sw:damask('#DCD2C2','#C6B79F')},
+  {id:'wp-dark',t:'דמשק כהה',en:'dark moody damask wallpaper',sw:damask('#2F3A35','#45534C')},
+  {id:'wp-grass',t:'גראסקלות׳',en:'natural grasscloth wallpaper',sw:noise('#CDBB98','#7E6A47',.5,'.9 .03',2)}
+];
+const FLOORS = [
+  {id:'f-carrara',t:'שיש קררה לבן',en:'white Carrara marble large-format floor tiles',sw:marble('#F2F0EC','#8E8E8E',3)},
+  {id:'f-calacatta',t:'שיש קלקטה זהב',en:'Calacatta gold marble floor',sw:marble('#F4EFE6','#B08D57',8,.005,.012)},
+  {id:'f-nero',t:'שיש שחור',en:'black Nero Marquina marble floor',sw:marble('#22201F','#D9D3C8',5)},
+  {id:'f-travertine',t:'טרוורטין',en:'honed travertine floor',sw:noise('#D9C7A8','#8F7550',.45,'.5 .02',3)},
+  {id:'f-beige',t:'פורצלן בז׳ גדול',en:'large-format warm beige porcelain tiles',sw:grid('#E3D6C2','#CDBFAA',90)},
+  {id:'f-concrete',t:'דמוי בטון',en:'concrete-look porcelain floor',sw:noise('#AFAAA3','#55504A',.35,'.02',4)},
+  {id:'f-microcement',t:'מיקרוטופינג',en:'seamless microcement floor',sw:noise('#C6BEB2','#6E665D',.3,'.01',4)},
+  {id:'f-terrazzo',t:'טרצו',en:'terrazzo floor',sw:terrazzo('#EDE7DD',['#B08D6A','#8A8A84','#D9CDB8','#C46F4E','#5E6B5A'])},
+  {id:'f-oak',t:'פרקט אלון בהיר',en:'light oak wide-plank wood floor',sw:planks('#D8B98F','#CFAE82','#8A6640')},
+  {id:'f-walnut',t:'פרקט אגוז',en:'dark walnut wood floor',sw:planks('#6E4B33','#664430','#2E1E14')},
+  {id:'f-herring',t:'פרקט הרינגבון',en:'oak herringbone parquet',sw:herring('#C9A57A','#B8935F','#8A6640')},
+  {id:'f-chevron',t:'פרקט פישבון',en:'oak chevron (fishbone) parquet',sw:herring('#D2B386','#BB9867','#8A6640',true)},
+  {id:'f-checker',t:'שחמט שחור-לבן',en:'black and white checkerboard marble floor',sw:checker('#F1EEE8','#2A2725',30,45)},
+  {id:'f-encaustic',t:'אריחים מצוירים',en:'patterned encaustic cement tiles',sw:encaustic('#EDE6D8','#4E6A78','#B6825E')},
+  {id:'f-hex',t:'משושים',en:'hexagon tiles',sw:hexes('#E8E2D8','#9AA394','#FFFFFF')},
+  {id:'f-stone',t:'אבן טבעית',en:'natural limestone floor',sw:noise('#D3C8B5','#7D705C',.4,'.03',5)}
+];
+const CLADS = [
+  {id:'c-none',t:'בלי חיפוי',en:'',sw:solid('#F4F1EA')},
+  {id:'c-subway',t:'אריחי סאבוויי לבנים',en:'white glossy subway tiles',sw:subway('#F7F5F0','#D6D0C6')},
+  {id:'c-subway-v',t:'סאבוויי ירוק',en:'deep green glossy subway tiles',sw:subway('#4F6B58','#DAD5C8')},
+  {id:'c-zellige',t:'זליג׳ לבן',en:'handmade white zellige tiles',sw:zellige(['#F2EEE6','#E9E3D8','#F7F4EE','#E2DBCF','#EEE8DE'],'#D8D0C3')},
+  {id:'c-zellige-b',t:'זליג׳ כחול',en:'handmade blue zellige tiles',sw:zellige(['#3E5C76','#4A6A85','#34506A','#56758F','#2F4A63'],'#D8D0C3')},
+  {id:'c-terracotta',t:'זליג׳ טרקוטה',en:'terracotta zellige tiles',sw:zellige(['#B8714E','#C27D58','#A9643F','#CB8A66'],'#E2D6C6')},
+  {id:'c-marble',t:'שיש מלא על הקיר',en:'full-height book-matched marble wall cladding',sw:marble('#F0EDE7','#9A8F80',12,.005,.015)},
+  {id:'c-mosaic',t:'פסיפס',en:'small mosaic tiles',sw:mosaic(['#E9E4DA','#D8CFC0','#C9BCA8','#F2EEE7'])},
+  {id:'c-fishscale',t:'אריחי קשקשים',en:'fish-scale tiles',sw:U(SV(240,180,`<defs><pattern id="p" width="30" height="20" patternUnits="userSpaceOnUse"><rect width="30" height="20" fill="#D6CEC0"/><path d="M0 20a15 15 0 0 1 30 0z" fill="#A9B39A" stroke="#E9E4DA"/><path d="M-15 10a15 15 0 0 1 30 0zM15 10a15 15 0 0 1 30 0z" fill="#BCC4AE" stroke="#E9E4DA"/></pattern></defs><rect width="240" height="180" fill="url(#p)"/>`))},
+  {id:'c-wood',t:'חיפוי עץ',en:'warm wood wall cladding',sw:planks('#A57A52','#9A6F49','#5C3E26')},
+  {id:'c-stone',t:'אבן',en:'natural stone wall cladding',sw:noise('#BFAF98','#5F4F3E',.55,'.04',5)},
+  {id:'c-encaustic',t:'אריחים מצוירים',en:'patterned encaustic wall tiles',sw:encaustic('#F0EADF','#B6825E','#4E6A78')}
+];
+const LIGHT = [
+  {id:'hidden',t:'תאורה נסתרת',en:'hidden indirect cove lighting',ic:'<path d="M2 6h20M4 6v3h16V6"/><path d="M6 12c3 2 9 2 12 0" opacity=".6"/><path d="M8 15c2 1 6 1 8 0" opacity=".4"/>'},
+  {id:'led',t:'פסי לד',en:'linear LED strip profiles',ic:'<path d="M3 8h18M3 16h18"/><path d="M5 8v8M19 8v8" opacity=".3"/><path d="M6 11h12" stroke-dasharray="1 2"/>'},
+  {id:'spot-r',t:'ספוטים עגולים שקועים',en:'round recessed downlights',ic:'<path d="M2 5h20"/><circle cx="7" cy="9" r="2.2"/><circle cx="17" cy="9" r="2.2"/><path d="M5 13l-2 7M9 13l2 7M15 13l-2 7M19 13l2 7" opacity=".4"/>'},
+  {id:'spot-s',t:'ספוטים מרובעים',en:'square recessed downlights',ic:'<path d="M2 5h20"/><rect x="5" y="7" width="4" height="4"/><rect x="15" y="7" width="4" height="4"/><path d="M5 14l-2 6M9 14l2 6M15 14l-2 6M19 14l2 6" opacity=".4"/>'},
+  {id:'track',t:'מסילה מגנטית',en:'black magnetic track lighting',ic:'<path d="M2 5h20M2 7h20"/><path d="M6 7v3M12 7v3M18 7v3"/><rect x="4.5" y="10" width="3" height="4" rx="1"/><rect x="10.5" y="10" width="3" height="4" rx="1"/><rect x="16.5" y="10" width="3" height="4" rx="1"/>'},
+  {id:'crystal',t:'נברשת קריסטל',en:'crystal chandelier',ic:'<path d="M12 2v4M5 10h14M7 10l5-4 5 4M6 10v4M10 10v6M14 10v6M18 10v4M12 10v8"/><circle cx="6" cy="15" r=".8"/><circle cx="18" cy="15" r=".8"/><circle cx="10" cy="17" r=".8"/><circle cx="14" cy="17" r=".8"/><circle cx="12" cy="19" r=".8"/>'},
+  {id:'chandelier',t:'נברשת מודרנית',en:'modern sculptural chandelier',ic:'<path d="M12 2v6M4 12c2-4 14-4 16 0"/><circle cx="4" cy="13" r="1.8"/><circle cx="20" cy="13" r="1.8"/><circle cx="12" cy="10.5" r="1.8"/><path d="M8 10.8v3M16 10.8v3"/><circle cx="8" cy="15" r="1.4"/><circle cx="16" cy="15" r="1.4"/>'},
+  {id:'pendant',t:'מנורות תלויות',en:'pendant lights (e.g. over island or dining table)',ic:'<path d="M7 2v7M17 2v9"/><path d="M4 13a3 3 0 0 1 6 0zM14 15a3 3 0 0 1 6 0z"/><path d="M2 2h20"/>'},
+  {id:'globe',t:'מנורות כדור',en:'opal glass globe pendants',ic:'<path d="M2 2h20M8 2v6M16 2v4"/><circle cx="8" cy="12" r="4"/><circle cx="16" cy="9.5" r="3.5"/>'},
+  {id:'ceil-r',t:'גוף תאורה עגול צמוד תקרה',en:'round flush ceiling lights',ic:'<path d="M2 4h20"/><path d="M5 4a7 4 0 0 0 14 0z"/><path d="M8 12l-2 6M12 12v7M16 12l2 6" opacity=".4"/>'},
+  {id:'ceil-s',t:'גוף תאורה מרובע',en:'square flush ceiling panels',ic:'<path d="M2 4h20"/><rect x="6" y="4" width="12" height="4"/><path d="M8 11l-2 7M12 11v8M16 11l2 7" opacity=".4"/>'},
+  {id:'wall',t:'מנורות קיר',en:'wall sconces',ic:'<path d="M4 4v16"/><path d="M4 12h4"/><path d="M8 8h6l2 8H6z"/>'},
+  {id:'floor',t:'מנורת רצפה',en:'floor lamps',ic:'<path d="M8 3h8l2 6H6z"/><path d="M12 9v11M8 21h8"/>'},
+  {id:'table',t:'מנורות שולחן',en:'table lamps',ic:'<path d="M8 4h8l2 6H6z"/><path d="M12 10v6"/><path d="M9 16h6l-1 4h-4z"/>'},
+  {id:'float',t:'תקרה צפה',en:'floating dropped ceiling with perimeter light gap',ic:'<path d="M2 4h20M2 4v4h20V4"/><rect x="5" y="8" width="14" height="3"/><path d="M4 10l-1 2M20 10l1 2" opacity=".5"/>'},
+  {id:'stairs-l',t:'תאורת מדרגות',en:'step lights on the stairs',ic:'<path d="M3 20h5v-5h5v-5h5V5h3"/><path d="M4 19h3M9 14h3M14 9h3" opacity=".5"/>'},
+  {id:'natural',t:'אור יום טבעי',en:'abundant natural daylight',ic:'<circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2"/>'},
+  {id:'warm',t:'אווירה חמימה של ערב',en:'warm evening ambience (2700K)',ic:'<path d="M20 14A8 8 0 1 1 10 4a6 6 0 0 0 10 10z"/>'}
+];
+const VIEWS = ['נוף רחב מהכניסה','זווית מהפינה','מבט ממול','פרט קרוב (קלוז-אפ)'];
+const VIEWS_EN = ['wide eye-level view from the entrance','three-quarter view from a corner of the room','view from the opposite side of the room','close-up detail shot highlighting materials and finishes'];
+
+/* ================= STATE ================= */
+const fresh = () => ({plans:{top:[],walls:[],other:[]}, type:'', rooms:[], style:'', note:'', items:{}, detected:[], floor:'', clad:'', paint:'', wp:'wp-none', frames:[], light:[], extra:''});
+let S = fresh(); let step = 0; let lastResults = []; let wallTab = 'floor';
+const $ = id => document.getElementById(id);
+const LS = { get(k,d=''){try{return localStorage.getItem('yb-'+k)??d}catch(_){return d}}, set(k,v){try{localStorage.setItem('yb-'+k,v)}catch(_){}} };
+const toast = (m) => { const t=$('toast'); t.textContent=m; t.classList.add('on'); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('on'),2600); };
+const show = (id) => { document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.id===id)); window.scrollTo(0,0); };
+
+/* ================= IMAGES ================= */
+const loadImg = (src) => new Promise((ok,no)=>{const i=new Image(); i.onload=()=>ok(i); i.onerror=no; i.src=src;});
+async function shrink(file, max=1800){
+  const url = URL.createObjectURL(file);
+  try{ const im = await loadImg(url); const k=Math.min(1,max/Math.max(im.naturalWidth,im.naturalHeight));
+    const c=document.createElement('canvas'); c.width=Math.round(im.naturalWidth*k); c.height=Math.round(im.naturalHeight*k);
+    const x=c.getContext('2d'); x.fillStyle='#fff'; x.fillRect(0,0,c.width,c.height); x.drawImage(im,0,0,c.width,c.height);
+    return c.toDataURL('image/jpeg',.88);
+  } finally { URL.revokeObjectURL(url); }
+}
+const dataToBlob = (d) => { const [h,b]=d.split(','); const mime=h.match(/:(.*?);/)[1]; const bin=atob(b); const u=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i); return new Blob([u],{type:mime}); };
+const allPlans = () => [...S.plans.top,...S.plans.walls,...S.plans.other];
+
+/* ================= STEPS ================= */
+const STEPS = [
+  {t:'העלאת תוכניות', render:rPlans, ok:()=>allPlans().length>0, next:'שליחה והמשך'},
+  {t:'מה עושים?', render:rBrief, ok:()=>!!S.type, next:'שליחה והמשך'},
+  {t:'מה יש בתוכנית', render:rItems, ok:()=>true, next:'המשך לריצוף וקירות'},
+  {t:'ריצוף וקירות', render:rWalls, ok:()=>true, next:'המשך לתאורה'},
+  {t:'תאורה וחשמל', render:rLight, ok:()=>true, next:'המשך לסיכום'},
+  {t:'סיכום', render:rSum, ok:()=>true, next:'צרו לי הדמיות'}
+];
+function go(n){
+  step=n; show('wiz');
+  $('stepTitle').textContent=STEPS[n].t;
+  $('dots').innerHTML=STEPS.map((_,i)=>`<i class="${i<=n?'done':''}"></i>`).join('');
+  STEPS[n].render(); refreshNext();
+}
+function refreshNext(){ const s=STEPS[step]; $('nextBtn').textContent=s.next; $('nextBtn').disabled=!s.ok(); }
+
+/* ---- step 1: plans ---- */
+const SLOTS=[['top','תוכנית מבט על','תוכנית הדירה / החלל מלמעלה','<path d="M3 3h18v18H3zM3 12h7v9M10 3v5M14 12h7M14 12v4"/>'],['walls','תוכנית קירות וחזיתות','פריסות קירות, מטבח, חזיתות','<path d="M3 20h18M5 20V6h14v14M5 10h14M9 6v4M15 6v4M8 14h3v6M14 14h3v3h-3z"/>'],['other','תוכנית חשמל / אחר','תאורה, חשמל, סקיצות, תמונות השראה','<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>']];
+function rPlans(){
+  $('stepBody').innerHTML = `<p class="lead">מעלים מהגלריה כמה תוכניות שרוצים. כל סוג תוכנית במקום שלו – ככה ChatGPT מבין בדיוק מה זה.</p>
+  <div class="slots">${SLOTS.map(([k,t,d,ic])=>`<div class="slot"><h3><svg class="ic" viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#7A5634" stroke-width="1.4" stroke-linejoin="round" aria-hidden="true">${ic}</svg>${t}</h3><p>${d}</p>
+    <div class="thumbs">${S.plans[k].map((src,i)=>`<div class="thumb"><img src="${src}" alt="${t} ${i+1}"><button type="button" data-del="${k}:${i}" aria-label="מחיקה"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>`).join('')}</div>
+    <label class="add"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>${S.plans[k].length?'עוד תמונה':'העלאה מהגלריה'}<input type="file" accept="image/*" multiple data-slot="${k}" aria-label="העלאת ${t}"></label></div>`).join('')}</div>
+  <p class="muted" style="margin-top:18px">יש תוכנית ב-PDF? צלמי מסך של התוכנית והעלי את התמונה.</p>`;
+  $('stepBody').querySelectorAll('input[type=file]').forEach(inp=>inp.addEventListener('change',async e=>{
+    const k=e.target.dataset.slot; const files=[...e.target.files]; if(!files.length)return;
+    toast('טוען...');
+    for(const f of files){ try{ S.plans[k].push(await shrink(f)); }catch(_){ toast('לא הצלחתי לפתוח את אחת התמונות'); } }
+    rPlans(); refreshNext();
+  }));
+  $('stepBody').querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click',()=>{const [k,i]=b.dataset.del.split(':'); S.plans[k].splice(+i,1); rPlans(); refreshNext();}));
+}
+
+/* ---- step 2: brief ---- */
+function rBrief(){
+  const rooms = ROOMS[S.type]||[];
+  $('stepBody').innerHTML = `
+  <div class="sec"><h3>מה הפרויקט?</h3><div class="grid">${TYPES.map(x=>`<button type="button" class="tile" data-type="${x.id}" aria-pressed="${S.type===x.id}">${P(ICON[x.ic])}${x.t}</button>`).join('')}</div></div>
+  ${rooms.length?`<div class="sec"><h3>איזה חלל להדמות?</h3><p>אפשר לבחור כמה</p><div class="chips">${rooms.map(r=>`<button type="button" class="chip" data-room="${r}" aria-pressed="${S.rooms.includes(r)}">${r}</button>`).join('')}</div></div>`:''}
+  <div class="sec"><h3>סגנון</h3><div class="chips">${STYLES.map(r=>`<button type="button" class="chip" data-style="${r}" aria-pressed="${S.style===r}">${r}</button>`).join('')}</div></div>
+  <div class="sec"><h3>מה את רוצה שנעשה?</h3><p>כתבי במילים שלך – למשל: "סלון פתוח למטבח, משפחה עם ילדים, הרבה אור, גוונים טבעיים"</p>
+  <label class="sr" for="note" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">תיאור הבקשה</label><textarea id="note" placeholder="כתבי כאן...">${esc(S.note)}</textarea></div>`;
+  const B=$('stepBody');
+  B.querySelectorAll('[data-type]').forEach(b=>b.addEventListener('click',()=>{ if(S.type!==b.dataset.type){S.type=b.dataset.type; S.rooms=[];} rBrief(); refreshNext(); }));
+  B.querySelectorAll('[data-room]').forEach(b=>b.addEventListener('click',()=>{ const r=b.dataset.room; S.rooms=S.rooms.includes(r)?S.rooms.filter(x=>x!==r):[...S.rooms,r]; b.setAttribute('aria-pressed',S.rooms.includes(r)); }));
+  B.querySelectorAll('[data-style]').forEach(b=>b.addEventListener('click',()=>{ S.style=S.style===b.dataset.style?'':b.dataset.style; B.querySelectorAll('[data-style]').forEach(x=>x.setAttribute('aria-pressed',S.style===x.dataset.style)); }));
+  $('note').addEventListener('input',e=>S.note=e.target.value);
+}
+const esc = s => String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ---- step 3: items ---- */
+let detecting = null;
+function rItems(){
+  const B=$('stepBody');
+  if(detecting){ B.innerHTML=`<div class="progress" style="min-height:50dvh"><div class="spin" aria-hidden="true"></div><h2 style="font-size:26px">לומד את התוכנית...</h2><p class="muted">מזהה מה יש בתוכניות שהעלית</p></div>`; $('nextBtn').disabled=true; return; }
+  const det = S.detected.length;
+  const relevant = ITEMS.filter(g=> !(g.g==='בית כנסת' && S.type!=='knesset' && !g.list.some(([id])=>S.detected.includes(id))) && !(g.g==='אולם ועסק' && !['ulam','misrad','esek'].includes(S.type) && !g.list.some(([id])=>S.detected.includes(id))) );
+  B.innerHTML = `${det?`<div class="note"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6E7C56" stroke-width="2" stroke-linecap="round" aria-hidden="true" style="flex:none;margin-top:2px"><path d="M5 12l5 5 9-10"/></svg>זיהיתי בתוכנית ${det} פריטים וסימנתי אותם. בדקי – מה שלא נכון לחצי כדי לבטל, ומה שחסר לחצי כדי להוסיף.</div>`:`<div class="note">${S._detErr?esc(S._detErr):'סמני מה יש בתוכנית.'}</div>`}
+  ${relevant.map(g=>`<div class="sec"><h3>${g.g}</h3><div class="grid">${g.list.map(([id,t])=>`<button type="button" class="tile" data-item="${id}" aria-pressed="${!!S.items[id]}">${S.detected.includes(id)?'<span class="badge">זוהה</span>':''}${P(ICON[id])}${t}</button>`).join('')}</div></div>`).join('')}`;
+  B.querySelectorAll('[data-item]').forEach(b=>b.addEventListener('click',()=>{ const id=b.dataset.item; S.items[id]=!S.items[id]; b.setAttribute('aria-pressed',!!S.items[id]); }));
+  refreshNext();
+}
+
+/* ---- step 4: floors & walls ---- */
+const WTABS=[['floor','ריצוף'],['clad','חיפוי קירות'],['paint','צבע קירות'],['wp','טפט'],['frames','מסגרות דקורטיביות']];
+function rWalls(){
+  const tile=(arr,key,multi=false)=>`<div class="grid wide">${arr.map(x=>{const on=multi?S[key].includes(x.id):S[key]===x.id; return `<button type="button" class="tile photo" data-k="${key}" data-v="${x.id}" data-m="${multi?1:0}" aria-pressed="${on}"><span class="sw" style="background:${x.sw.startsWith('url')?x.sw+' center/cover':x.sw}"></span>${x.t}</button>`}).join('')}</div>`;
+  const bodies={
+    floor:`<div class="sec"><h3>ריצוף</h3><p>בחרי ריצוף אחד</p>${tile(FLOORS,'floor')}</div>`,
+    clad:`<div class="sec"><h3>חיפוי קירות</h3><p>למטבח, לאמבטיה או לקיר מיוחד</p>${tile(CLADS,'clad')}</div>`,
+    paint:`<div class="sec"><h3>צבע קירות</h3><div class="grid">${PAINT.map(([c,t])=>`<button type="button" class="tile photo" data-k="paint" data-v="${c}" data-m="0" aria-pressed="${S.paint===c}"><span class="sw" style="background:${c}"></span>${t}</button>`).join('')}</div></div>`,
+    wp:`<div class="sec"><h3>טפט</h3>${tile(WALLP,'wp')}</div>`,
+    frames:`<div class="sec"><h3>מסגרות וקישוטי קיר</h3><p>אפשר לבחור כמה</p>${tile(FRAMES,'frames',true)}</div>`
+  };
+  $('stepBody').innerHTML = `<div class="tabs" role="tablist">${WTABS.map(([k,t])=>`<button type="button" role="tab" class="tab ${wallTab===k?'on':''}" data-tab="${k}" aria-selected="${wallTab===k}">${t}${pickedMark(k)}</button>`).join('')}</div>${bodies[wallTab]}`;
+  const B=$('stepBody');
+  B.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>{wallTab=b.dataset.tab; rWalls();}));
+  B.querySelectorAll('[data-k]').forEach(b=>b.addEventListener('click',()=>{
+    const k=b.dataset.k, v=b.dataset.v;
+    if(b.dataset.m==='1'){ S[k]=S[k].includes(v)?S[k].filter(x=>x!==v):[...S[k],v]; }
+    else { S[k]= S[k]===v ? (k==='wp'?'wp-none':'') : v;
+      const i=WTABS.findIndex(t=>t[0]===wallTab); if(S[k] && i<WTABS.length-1 && k!=='wp'){ wallTab=WTABS[i+1][0]; rWalls(); window.scrollTo({top:0,behavior:'smooth'}); return; } }
+    rWalls();
+  }));
+}
+const pickedMark = k => { const v=S[k]; const on=Array.isArray(v)?v.length:(k==='wp'?v!=='wp-none':!!v); return on?' ✓':''; };
+
+/* ---- step 5: lighting ---- */
+function rLight(){
+  $('stepBody').innerHTML = `<div class="sec"><h3>תאורה</h3><p>אפשר לבחור כמה</p><div class="grid">${LIGHT.map(x=>`<button type="button" class="tile" data-l="${x.id}" aria-pressed="${S.light.includes(x.id)}">${P(x.ic)}${x.t}</button>`).join('')}</div></div>
+  <div class="sec"><h3>עוד משהו להוסיף להדמיה?</h3><p>רהיט מסוים, צבע של ספה, וילונות, צמחים, אומנות על הקירות...</p><textarea id="extra" placeholder="כתבי כאן...">${esc(S.extra)}</textarea></div>`;
+  $('stepBody').querySelectorAll('[data-l]').forEach(b=>b.addEventListener('click',()=>{const v=b.dataset.l; S.light=S.light.includes(v)?S.light.filter(x=>x!==v):[...S.light,v]; b.setAttribute('aria-pressed',S.light.includes(v));}));
+  $('extra').addEventListener('input',e=>S.extra=e.target.value);
+}
+
+/* ---- step 6: summary ---- */
+const nameOf=(arr,id)=>(arr.find(x=>x.id===id)||{}).t||'';
+function rSum(){
+  const typ=nameOf(TYPES,S.type);
+  const items=Object.keys(S.items).filter(k=>S.items[k]).map(k=>ITEM_BY[k].t);
+  const paint=(PAINT.find(p=>p[0]===S.paint)||[])[1];
+  const rows=[['תוכניות',`${allPlans().length} תמונות`],['פרויקט',[typ,S.rooms.join(', ')].filter(Boolean).join(' – ')],['סגנון',S.style],['הבקשה',S.note],['פריטים',items.join(', ')],['ריצוף',nameOf(FLOORS,S.floor)],['חיפוי',S.clad&&S.clad!=='c-none'?nameOf(CLADS,S.clad):''],['צבע קירות',paint],['טפט',S.wp!=='wp-none'?nameOf(WALLP,S.wp):''],['מסגרות',S.frames.map(f=>nameOf(FRAMES,f)).join(', ')],['תאורה',S.light.map(l=>nameOf(LIGHT,l)).join(', ')],['תוספות',S.extra]].filter(r=>r[1]);
+  const hasKey=!!LS.get('key');
+  $('stepBody').innerHTML = `${hasKey?'':`<div class="err">צריך לחבר את ChatGPT לפני שאפשר ליצור הדמיות. <button type="button" class="ghost" id="goSet" style="margin-top:8px">להגדרות</button></div>`}
+  <p class="lead">זה מה שנשלח ל-ChatGPT. אם צריך לשנות משהו – חזרה עם החץ למעלה.</p>
+  <div class="sum">${rows.map(([a,b])=>`<div><b>${a}</b><span>${esc(b)}</span></div>`).join('')}</div>`;
+  const g=$('goSet'); if(g) g.addEventListener('click',openSet);
+}
+
+/* ================= OPENAI ================= */
+const KEY = () => LS.get('key').trim();
+async function oa(path, opts){
+  const r = await fetch('https://api.openai.com/v1/'+path,{...opts,headers:{Authorization:'Bearer '+KEY(),...(opts.headers||{})}});
+  let j=null; try{ j=await r.json(); }catch(_){}
+  if(!r.ok){ const m=(j&&j.error&&j.error.message)||('שגיאה '+r.status); const e=new Error(m); e.status=r.status; e.code=j&&j.error&&j.error.code; throw e; }
+  return j;
+}
+const TXT_MODELS = () => [LS.get('txt'),'gpt-5.6','gpt-5','gpt-4.1','gpt-4o'].filter(Boolean);
+async function detect(){
+  if(!KEY()){ S._detErr='ChatGPT עוד לא מחובר (בהגדרות), אז סמני בעצמך מה יש בתוכנית.'; return; }
+  const ids=Object.keys(ITEM_BY);
+  const content=[{type:'text',text:`You are helping an interior designer. Look at these architectural plans (floor plans, wall elevations, electrical plans). The project is: ${(TYPES.find(t=>t.id===S.type)||{}).en||'interior'}. Identify which of these elements appear in the plans (as drawn symbols or labels, possibly in Hebrew). Allowed ids: ${ids.map(i=>i+' ('+ITEM_BY[i].en+')').join(', ')}. Answer ONLY JSON: {"items":["id",...]}`}];
+  allPlans().forEach(u=>content.push({type:'image_url',image_url:{url:u}}));
+  let lastErr;
+  for(const model of TXT_MODELS()){
+    try{
+      const j=await oa('chat/completions',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model,messages:[{role:'user',content}],response_format:{type:'json_object'}})});
+      const out=JSON.parse(j.choices[0].message.content||'{}');
+      const found=(out.items||[]).filter(i=>ITEM_BY[i]);
+      S.detected=found; found.forEach(i=>S.items[i]=true); S._detErr=''; return;
+    }catch(e){ lastErr=e; if(e.status===401){ break; } }
+  }
+  S._detErr = lastErr&&lastErr.status===401 ? 'המפתח של ChatGPT לא תקין – בדקי בהגדרות. בינתיים סמני בעצמך.' : 'לא הצלחתי לזהות אוטומטית הפעם – סמני בעצמך מה יש בתוכנית.';
+}
+function buildPrompt(viewIdx){
+  const typ=(TYPES.find(t=>t.id===S.type)||{}).en||'interior space';
+  const items=Object.keys(S.items).filter(k=>S.items[k]).map(k=>ITEM_BY[k].en);
+  const f=x=>x?x:null;
+  const paint=PAINT.find(p=>p[0]===S.paint);
+  const lines=[
+    `Create a photorealistic, elegant, magazine-quality interior design rendering of a ${typ}${S.rooms.length?` – space: ${S.rooms.join(', ')} (names in Hebrew)`:''}.`,
+    `The attached images are the architect's plans${S.plans.walls.length?' (floor plan and wall elevations)':''}. Follow the layout, proportions, walls, openings and positions of fixtures exactly as drawn. Do not show the plan itself – show the finished, furnished, built space as a real photograph.`,
+    S.style?`Design style: ${STYLE_EN[S.style]||S.style}.`:null,
+    items.length?`Elements that must appear in their planned positions: ${items.join(', ')}.`:null,
+    S.floor?`Flooring: ${(FLOORS.find(x=>x.id===S.floor)||{}).en}.`:null,
+    S.clad&&S.clad!=='c-none'?`Wall cladding / tiles: ${(CLADS.find(x=>x.id===S.clad)||{}).en} (on the kitchen backsplash, bathroom walls or one feature wall as appropriate).`:null,
+    paint?`Wall paint colour: ${paint[2]} (${paint[0]}).`:null,
+    S.wp!=='wp-none'?`Wallpaper on one feature wall: ${(WALLP.find(x=>x.id===S.wp)||{}).en}.`:null,
+    S.frames.length?`Decorative wall details: ${S.frames.map(id=>(FRAMES.find(x=>x.id===id)||{}).en).join('; ')}.`:null,
+    S.light.length?`Lighting: ${S.light.map(id=>(LIGHT.find(x=>x.id===id)||{}).en).join('; ')}.`:null,
+    S.note?`The designer's request (in Hebrew – follow it): "${S.note}"`:null,
+    S.extra?`Additional wishes (in Hebrew – follow them): "${S.extra}"`:null,
+    `Camera: ${VIEWS_EN[viewIdx%VIEWS_EN.length]}, 24mm lens, straight verticals, soft natural light, realistic materials and shadows, tasteful styling, no people, no text, no watermark.`
+  ];
+  return lines.filter(Boolean).join('\n');
+}
+async function genOne(i){
+  const models=[LS.get('img'),'gpt-image-2','gpt-image-1.5','gpt-image-1'].filter(Boolean);
+  let lastErr;
+  for(const model of models){
+    const fd=new FormData();
+    fd.append('model',model); fd.append('prompt',buildPrompt(i)); fd.append('size','1536x1024'); fd.append('quality',LS.get('q','medium')); fd.append('n','1');
+    allPlans().slice(0,16).forEach((u,k)=>fd.append('image[]',dataToBlob(u),`plan-${k+1}.jpg`));
+    try{ const j=await oa('images/edits',{method:'POST',body:fd}); const d=j.data&&j.data[0]; if(!d)throw new Error('לא התקבלה תמונה');
+      return d.b64_json?'data:image/png;base64,'+d.b64_json:d.url;
+    }catch(e){ lastErr=e; if(e.status===401||e.status===429||/safety|moderation/i.test(e.message))break; if(!/model|does not exist|not found|access/i.test(e.message))break; }
+  }
+  throw lastErr;
+}
+async function generate(){
+  if(!KEY()){ openSet(); toast('צריך קודם לחבר את ChatGPT'); return; }
+  show('prog'); $('progErr').innerHTML=''; $('progTitle').textContent='ההדמיות בהכנה';
+  const n=+LS.get('n','2'); const out=[]; let errs=[];
+  $('progText').textContent=`ChatGPT מעצב ${n>1?n+' הדמיות':'הדמיה'} לפי הבחירות שלך. זה לוקח בדרך כלל דקה עד שלוש – אפשר להשאיר את המסך פתוח.`;
+  await Promise.all(Array.from({length:n},(_,i)=>genOne(i).then(u=>out[i]=u).catch(e=>errs.push(e))));
+  const imgs=out.filter(Boolean);
+  if(!imgs.length){ const e=errs[0]||{}; const msg = e.status===401?'המפתח של ChatGPT לא תקין. בדקי אותו בהגדרות.': e.status===429?'נגמרה היתרה או שיש עומס בחשבון ChatGPT. נסי שוב עוד מעט.': /verif/i.test(e.message||'')?'החשבון ב-OpenAI צריך אימות ארגון כדי ליצור תמונות. זה נעשה פעם אחת באתר platform.openai.com.' : 'משהו השתבש: '+esc(e.message||'');
+    $('progTitle').textContent='לא הצלחנו הפעם'; $('progText').textContent=''; $('progErr').innerHTML=`<div class="err">${msg}</div><div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap"><button class="big" type="button" id="retry" style="max-width:240px">לנסות שוב</button><button class="ghost" type="button" id="backSum">חזרה לבחירות</button></div>`;
+    $('retry').onclick=generate; $('backSum').onclick=()=>go(5); return; }
+  lastResults=imgs;
+  const title=[nameOf(TYPES,S.type),S.rooms.join(', ')].filter(Boolean).join(' – ')||'הדמיה';
+  try{ await dbPut({id:Date.now(),date:new Date().toISOString(),title,imgs,state:{...S,plans:{top:[],walls:[],other:[]}}}); }catch(_){}
+  showResults(imgs,title);
+}
+
+/* ================= RESULTS & SHARING ================= */
+function showResults(imgs,title){
+  show('res'); $('resTitle').textContent=title||'ההדמיות מוכנות';
+  $('resGrid').innerHTML = imgs.map((u,i)=>`<div class="res"><img src="${u}" alt="הדמיה ${i+1}" data-i="${i}">
+   <div class="acts">
+     <button class="act sis" type="button" data-sis="${i}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg>לאחות</button>
+     <button class="act wa" type="button" data-wa="${i}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 19z"/></svg>וואטסאפ ללקוח</button>
+     <button class="act" type="button" data-mail="${i}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>במייל</button>
+     <button class="act" type="button" data-save="${i}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>שמירה</button>
+   </div></div>`).join('');
+  const G=$('resGrid');
+  G.querySelectorAll('img').forEach(im=>im.addEventListener('click',()=>{$('lbImg').src=im.src; $('lb').classList.add('on');}));
+  G.querySelectorAll('[data-sis]').forEach(b=>b.addEventListener('click',()=>shareTo('sister',imgs[+b.dataset.sis])));
+  G.querySelectorAll('[data-wa]').forEach(b=>b.addEventListener('click',()=>shareTo('client',imgs[+b.dataset.wa])));
+  G.querySelectorAll('[data-mail]').forEach(b=>b.addEventListener('click',()=>shareTo('mail',imgs[+b.dataset.mail])));
+  G.querySelectorAll('[data-save]').forEach(b=>b.addEventListener('click',()=>saveImg(imgs[+b.dataset.save])));
+}
+async function toFile(u){ const b = u.startsWith('data:')?dataToBlob(u):await (await fetch(u)).blob(); return new File([b],'hadmaya-yafa-bruiner.png',{type:b.type||'image/png'}); }
+async function shareTo(kind,u){
+  const text = 'הדמיה מאת יפה ברוינר – עיצוב פנים';
+  let file; try{ file=await toFile(u); }catch(_){}
+  if(file && navigator.canShare && navigator.canShare({files:[file]})){
+    if(kind==='sister') toast('בחרי וואטסאפ ← '+(LS.get('sis')?'אחותך':'איש הקשר'));
+    if(kind==='client') toast('בחרי וואטסאפ ← הלקוח');
+    if(kind==='mail') toast('בחרי דואר');
+    try{ await navigator.share({files:[file],title:text,text}); }catch(_){}
+    return;
+  }
+  // fallback without file sharing
+  if(kind==='sister'){ const num=normPhone(LS.get('sis')); if(!num){openSet();toast('הכניסי את מספר האחות בהגדרות');return;} saveImg(u); location.href='https://wa.me/'+num+'?text='+encodeURIComponent(text+' – התמונה נשמרה, מצרפת אותה'); }
+  else if(kind==='client'){ saveImg(u); location.href='https://wa.me/?text='+encodeURIComponent(text); }
+  else { saveImg(u); location.href='mailto:?subject='+encodeURIComponent(text)+'&body='+encodeURIComponent('מצורפת ההדמיה.'); }
+}
+const normPhone = p => { p=(p||'').replace(/\D/g,''); if(p.startsWith('0'))p='972'+p.slice(1); return p; };
+function saveImg(u){ const a=document.createElement('a'); a.href=u; a.download='hadmaya-yafa-bruiner.png'; document.body.appendChild(a); a.click(); a.remove(); }
+
+/* ================= HISTORY (IndexedDB) ================= */
+function db(){ return new Promise((ok,no)=>{ const r=indexedDB.open('yafa',1); r.onupgradeneeded=()=>r.result.createObjectStore('p',{keyPath:'id'}); r.onsuccess=()=>ok(r.result); r.onerror=()=>no(r.error); }); }
+async function dbPut(o){ const d=await db(); return new Promise((ok,no)=>{const t=d.transaction('p','readwrite'); t.objectStore('p').put(o); t.oncomplete=ok; t.onerror=()=>no(t.error);}); }
+async function dbAll(){ const d=await db(); return new Promise((ok,no)=>{const q=d.transaction('p').objectStore('p').getAll(); q.onsuccess=()=>ok(q.result.sort((a,b)=>b.id-a.id)); q.onerror=()=>no(q.error);}); }
+async function renderRecent(){
+  let list=[]; try{ list=await dbAll(); }catch(_){}
+  if(!list.length){ $('recent').innerHTML=''; return; }
+  $('recent').innerHTML = `<h3>ההדמיות האחרונות</h3>${list.slice(0,6).map(p=>`<button class="rec" type="button" data-p="${p.id}"><img src="${p.imgs[0]}" alt=""><div><b>${esc(p.title)}</b><span>${new Date(p.date).toLocaleDateString('he-IL')} · ${p.imgs.length} תמונות</span></div></button>`).join('')}`;
+  $('recent').querySelectorAll('[data-p]').forEach(b=>b.addEventListener('click',()=>{ const p=list.find(x=>x.id==b.dataset.p); lastResults=p.imgs; showResults(p.imgs,p.title); }));
+}
+
+/* ================= SETTINGS ================= */
+let setReturn='home';
+function openSet(){ setReturn=document.querySelector('.view.on').id; $('kKey').value=LS.get('key'); $('kSis').value=LS.get('sis'); $('kQ').value=LS.get('q','medium'); $('kN').value=LS.get('n','2'); $('kImg').value=LS.get('img'); $('kTxt').value=LS.get('txt'); show('set'); }
+$('saveSet').addEventListener('click',()=>{ LS.set('key',$('kKey').value.trim()); LS.set('sis',$('kSis').value.trim()); LS.set('q',$('kQ').value); LS.set('n',$('kN').value); LS.set('img',$('kImg').value.trim()); LS.set('txt',$('kTxt').value.trim()); toast('נשמר'); if(setReturn==='wiz'){show('wiz'); STEPS[step].render(); refreshNext();} else show(setReturn==='set'?'home':setReturn); });
+$('setBack').addEventListener('click',()=>{ if(setReturn==='wiz'){show('wiz');} else show(setReturn==='set'?'home':setReturn); });
+$('setBtn').addEventListener('click',openSet);
+
+/* ================= NAV ================= */
+$('startBtn').addEventListener('click',()=>{ S=fresh(); wallTab='floor'; go(0); });
+$('backBtn').addEventListener('click',()=>{ if(step===0){ show('home'); renderRecent(); } else go(step-1); });
+$('nextBtn').addEventListener('click',async()=>{
+  if(!STEPS[step].ok())return;
+  if(step===1){ // after brief: detect items from plans
+    detecting=true; go(2);
+    await detect(); detecting=false; if(step===2) rItems();
+    return;
+  }
+  if(step===5){ generate(); return; }
+  go(step+1);
+});
+$('homeBtn').addEventListener('click',()=>{ show('home'); renderRecent(); });
+$('newBtn').addEventListener('click',()=>{ S=fresh(); wallTab='floor'; go(0); });
+$('againBtn').addEventListener('click',()=>{ if(allPlans().length) generate(); else { toast('אין כאן את התוכניות המקוריות – מתחילים הדמיה חדשה'); S=fresh(); go(0);} });
+$('lbClose').addEventListener('click',()=>$('lb').classList.remove('on'));
+$('lb').addEventListener('click',e=>{ if(e.target.id==='lb') $('lb').classList.remove('on'); });
+renderRecent();
 }
 </script>
 <script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})})}</script>
