@@ -241,6 +241,15 @@ textarea:focus,.inp:focus{outline:2px solid var(--gold);outline-offset:1px}
       <label for="kN">כמה הדמיות בכל פעם</label>
       <select class="inp" id="kN"><option>1</option><option selected>2</option><option>3</option><option>4</option></select>
     </div>
+    <div class="field">
+      <label for="kWm">לוגו על ההדמיות</label>
+      <select class="inp" id="kWm">
+        <option value="both">באמצע (סימן מים) וגם בפינה</option>
+        <option value="center">רק באמצע (סימן מים)</option>
+        <option value="corner">רק בפינה</option>
+        <option value="none">בלי לוגו</option>
+      </select>
+    </div>
     <details style="margin-bottom:20px"><summary class="muted" style="cursor:pointer;min-height:44px">מתקדם</summary>
       <div class="field" style="margin-top:12px"><label for="kImg">מודל תמונות</label><input class="inp" id="kImg" dir="ltr" placeholder="gpt-image-2"></div>
       <div class="field"><label for="kTxt">מודל זיהוי</label><input class="inp" id="kTxt" dir="ltr" placeholder="אוטומטי"></div>
@@ -475,6 +484,45 @@ async function pdfToImages(file, max=2000, maxPages=12){
   }
   return out;
 }
+/* ---- watermark: YB logo + name on every render ---- */
+let _logo=null;
+async function logoImgs(){
+  if(_logo) return _logo;
+  const im=await loadImg('logo.png');
+  const w=document.createElement('canvas'); w.width=im.naturalWidth; w.height=im.naturalHeight;
+  const x=w.getContext('2d'); x.drawImage(im,0,0); x.globalCompositeOperation='source-in'; x.fillStyle='#fff'; x.fillRect(0,0,w.width,w.height);
+  return _logo={brown:im,white:w};
+}
+function rrect(x,X,Y,w,h,r){ x.beginPath(); x.moveTo(X+r,Y); x.arcTo(X+w,Y,X+w,Y+h,r); x.arcTo(X+w,Y+h,X,Y+h,r); x.arcTo(X,Y+h,X,Y,r); x.arcTo(X,Y,X+w,Y,r); x.closePath(); }
+async function stamp(src){
+  const mode=LS.get('wm','both'); if(mode==='none') return src;
+  try{
+    const [im,L]=await Promise.all([loadImg(src),logoImgs()]);
+    try{ await Promise.all([document.fonts.load('300 40px "Frank Ruhl Libre"'),document.fonts.load('400 40px "Frank Ruhl Libre"'),document.fonts.load('400 40px "Assistant"')]); }catch(_){}
+    const c=document.createElement('canvas'); c.width=im.naturalWidth; c.height=im.naturalHeight;
+    const x=c.getContext('2d'); x.drawImage(im,0,0);
+    const W=c.width,H=c.height,u=Math.min(W,H); x.direction='rtl';
+    if(mode==='both'||mode==='center'){
+      const lw=u*.40, lh=lw*L.white.height/L.white.width, top=(H-lh)/2-u*.04;
+      x.save(); x.globalAlpha=.24; x.shadowColor='rgba(0,0,0,.35)'; x.shadowBlur=u*.01;
+      x.drawImage(L.white,(W-lw)/2,top,lw,lh);
+      x.font=`300 ${Math.round(u*.05)}px "Frank Ruhl Libre", serif`; x.textAlign='center'; x.textBaseline='top'; x.fillStyle='#fff';
+      x.fillText('הדמיות יפה ברוינר',W/2,top+lh+u*.015); x.restore();
+    }
+    if(mode==='both'||mode==='corner'){
+      const pad=u*.022, lh=u*.075, lw=lh*L.brown.width/L.brown.height, f1=Math.round(u*.032), f2=Math.round(u*.02);
+      x.font=`400 ${f1}px "Frank Ruhl Libre", serif`; const t1='יפה ברוינר'; const w1=x.measureText(t1).width;
+      x.font=`400 ${f2}px "Assistant", sans-serif`; const t2='עיצוב פנים · הדמיה'; const w2=x.measureText(t2).width;
+      const tw=Math.max(w1,w2), bw=pad*2.2+lw+pad*.6+tw, bh=lh+pad*1.2, bx=W-bw-u*.03, by=H-bh-u*.03;
+      x.save(); x.fillStyle='rgba(247,242,235,.88)'; x.shadowColor='rgba(0,0,0,.18)'; x.shadowBlur=u*.012; rrect(x,bx,by,bw,bh,bh*.22); x.fill(); x.restore();
+      x.drawImage(L.brown,bx+bw-pad*1.1-lw,by+(bh-lh)/2,lw,lh);
+      const tr=bx+bw-pad*1.1-lw-pad*.6; x.textAlign='right'; x.textBaseline='alphabetic';
+      x.fillStyle='#3B2F27'; x.font=`400 ${f1}px "Frank Ruhl Libre", serif`; x.fillText(t1,tr,by+bh/2-f1*.05);
+      x.fillStyle='#6E6155'; x.font=`400 ${f2}px "Assistant", sans-serif`; x.fillText(t2,tr,by+bh/2+f2*1.25);
+    }
+    return c.toDataURL('image/jpeg',.92);
+  }catch(_){ return src; }
+}
 const dataToBlob = (d) => { const [h,b]=d.split(','); const mime=h.match(/:(.*?);/)[1]; const bin=atob(b); const u=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i); return new Blob([u],{type:mime}); };
 const allPlans = () => [...S.plans.top,...S.plans.walls,...S.plans.other];
 
@@ -683,7 +731,7 @@ async function generate(){
   const n=+LS.get('n','2'); const out=[]; let errs=[];
   $('progText').textContent=`ChatGPT מעצב ${n>1?n+' הדמיות':'הדמיה'} לפי הבחירות שלך. זה לוקח בדרך כלל דקה עד שלוש – אפשר להשאיר את המסך פתוח.`;
   await Promise.all(Array.from({length:n},(_,i)=>genOne(i).then(u=>out[i]=u).catch(e=>errs.push(e))));
-  const imgs=out.filter(Boolean);
+  const imgs=await Promise.all(out.filter(Boolean).map(stamp));
   if(!imgs.length){ const e=errs[0]||{}; const msg = e.status===401?'המפתח של ChatGPT לא תקין. בדקי אותו בהגדרות.': e.status===429?'נגמרה היתרה או שיש עומס בחשבון ChatGPT. נסי שוב עוד מעט.': /verif/i.test(e.message||'')?'החשבון ב-OpenAI צריך אימות ארגון כדי ליצור תמונות. זה נעשה פעם אחת באתר platform.openai.com.' : 'משהו השתבש: '+esc(e.message||'');
     $('progTitle').textContent='לא הצלחנו הפעם'; $('progText').textContent=''; $('progErr').innerHTML=`<div class="err">${msg}</div><div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap"><button class="big" type="button" id="retry" style="max-width:240px">לנסות שוב</button><button class="ghost" type="button" id="backSum">חזרה לבחירות</button></div>`;
     $('retry').onclick=generate; $('backSum').onclick=()=>go(6); return; }
@@ -713,7 +761,7 @@ $('handCopy').addEventListener('click',()=>copyText(buildPrompt(0,true)));
 $('handBack').addEventListener('click',()=>go(6));
 $('handIn').addEventListener('change',async e=>{
   const files=[...e.target.files]; if(!files.length)return; toast('טוען...');
-  const imgs=await readFiles(files); if(!imgs.length)return;
+  toast('מוסיף את הלוגו...'); const imgs=await Promise.all((await readFiles(files)).map(stamp)); if(!imgs.length)return;
   const title=[nameOf(TYPES,S.type),S.rooms.join(', ')].filter(Boolean).join(' – ')||'הדמיה';
   try{ await dbPut({id:Date.now(),date:new Date().toISOString(),title,imgs,state:{...S,plans:{top:[],walls:[],other:[]},refs:[]}}); }catch(_){}
   lastResults=imgs; showResults(imgs,title);
@@ -768,8 +816,8 @@ async function renderRecent(){
 
 /* ================= SETTINGS ================= */
 let setReturn='home';
-function openSet(){ setReturn=document.querySelector('.view.on').id; $('kKey').value=LS.get('key'); $('kSis').value=LS.get('sis'); $('kQ').value=LS.get('q','medium'); $('kN').value=LS.get('n','2'); $('kImg').value=LS.get('img'); $('kTxt').value=LS.get('txt'); show('set'); }
-$('saveSet').addEventListener('click',()=>{ LS.set('key',$('kKey').value.trim()); LS.set('sis',$('kSis').value.trim()); LS.set('q',$('kQ').value); LS.set('n',$('kN').value); LS.set('img',$('kImg').value.trim()); LS.set('txt',$('kTxt').value.trim()); toast('נשמר'); if(setReturn==='wiz'){show('wiz'); STEPS[step].render(); refreshNext();} else show(setReturn==='set'?'home':setReturn); });
+function openSet(){ setReturn=document.querySelector('.view.on').id; $('kKey').value=LS.get('key'); $('kSis').value=LS.get('sis'); $('kQ').value=LS.get('q','medium'); $('kN').value=LS.get('n','2'); $('kWm').value=LS.get('wm','both'); $('kImg').value=LS.get('img'); $('kTxt').value=LS.get('txt'); show('set'); }
+$('saveSet').addEventListener('click',()=>{ LS.set('key',$('kKey').value.trim()); LS.set('sis',$('kSis').value.trim()); LS.set('q',$('kQ').value); LS.set('n',$('kN').value); LS.set('wm',$('kWm').value); LS.set('img',$('kImg').value.trim()); LS.set('txt',$('kTxt').value.trim()); toast('נשמר'); if(setReturn==='wiz'){show('wiz'); STEPS[step].render(); refreshNext();} else show(setReturn==='set'?'home':setReturn); });
 $('setBack').addEventListener('click',()=>{ if(setReturn==='wiz'){show('wiz');} else show(setReturn==='set'?'home':setReturn); });
 $('setBtn').addEventListener('click',openSet);
 
